@@ -1,0 +1,191 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogKitSection from '@/components/blog/BlogKitSection';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep4-led-blink-code');
+
+<BlogHeader 
+  title={metadata.title}
+  description={metadata.description}
+  date={metadata.date}
+  author={metadata.author}
+  tags={metadata.tags}
+/>
+
+<BlogVideo 
+  videoId="ilQRdSuBDZs" 
+  title="Arduino Basics: Make an LED Blink with Code"
+/>
+
+<BlogSection>
+  ## Your First Arduino Program
+
+  Making an LED blink is the "Hello, World!" of Arduino programming. It's a simple yet powerful way to learn the basics of Arduino coding and hardware interaction.
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep4img1.jpg",
+        alt: "LED Circuit Setup",
+        caption: "LED circuit setup with Arduino and breadboard"
+      }
+    ]}
+  />
+
+  <BlogCallout type="tip">
+    **Getting Started Tip!**
+    
+    Before diving into the code, make sure you have your Arduino kit ready. We'll be using an LED, resistor, and jumper wires for this project.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Essential Tools
+
+  To follow along with this tutorial, you'll need the Arduino kit:
+
+  <BlogKitSection 
+    link="https://amzn.to/3Yv56Jg"
+    title="Get Your Arduino Kit"
+    description="This kit includes everything you need for the LED blinking project and many more exciting Arduino experiments."
+    image="/images/kit.jpg"
+  />
+
+  <BlogCallout type="important">
+    **Component Check:**
+    
+    <BlogList>
+      <BlogListItem>**Arduino Board** - The main microcontroller board</BlogListItem>
+      <BlogListItem>**LED** - A standard LED for the blinking effect</BlogListItem>
+      <BlogListItem>**220Ω Resistor** - To protect the LED from too much current</BlogListItem>
+      <BlogListItem>**Jumper Wires** - Two wires to connect the circuit</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Essential Arduino Functions
+
+  Let's understand the key functions we'll be using:
+
+  <BlogList>
+    <BlogListItem>
+      **pinMode()** - Configures a pin as either INPUT or OUTPUT
+      <BlogInlineCode>pinMode(7, OUTPUT);</BlogInlineCode>
+    </BlogListItem>
+    <BlogListItem>
+      **digitalWrite()** - Sets a pin to HIGH (5V) or LOW (0V)
+      <BlogInlineCode>digitalWrite(7, HIGH);</BlogInlineCode>
+    </BlogListItem>
+    <BlogListItem>
+      **delay()** - Pauses the program for a specified time in milliseconds
+      <BlogInlineCode>delay(1000); // Waits for 1 second</BlogInlineCode>
+    </BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Syntax Tip!**
+    
+    Remember to end each instruction with a semicolon (;) - it's like a period at the end of a sentence in Arduino code.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## The Blink Code
+
+  Here's the complete code to make your LED blink:
+
+  <BlogCode filename="LEDBlink.ino" language="cpp">
+{`void setup() {
+  // put your setup code here, to run once:
+  pinMode(7, OUTPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  digitalWrite(7, HIGH);  // Turn the LED on
+  delay(1000);           // Wait for 1 second
+  digitalWrite(7, LOW);   // Turn the LED off
+  delay(1000);           // Wait for 1 second
+}`}
+  </BlogCode>
+
+  <BlogCallout type="tip">
+    **Time Conversion:**
+    
+    <BlogList>
+      <BlogListItem>**1000ms** - Equal to 1 second</BlogListItem>
+      <BlogListItem>**500ms** - Equal to 0.5 seconds</BlogListItem>
+      <BlogListItem>**2000ms** - Equal to 2 seconds</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Code Explanation
+
+  Let's break down how the code works:
+
+  <OrderedList>
+    <OrderedListItem>
+      **Setup Function**
+      
+      <BlogInlineCode>pinMode(7, OUTPUT);</BlogInlineCode> tells Arduino that pin 7 will be used to send signals (OUTPUT mode)
+    </OrderedListItem>
+    <OrderedListItem>
+      **Loop Function - First Part**
+      
+      <BlogInlineCode>digitalWrite(7, HIGH);</BlogInlineCode> sends 5V to pin 7, turning the LED on
+      <BlogInlineCode>delay(1000);</BlogInlineCode> makes the program wait for 1 second
+    </OrderedListItem>
+    <OrderedListItem>
+      **Loop Function - Second Part**
+      
+      <BlogInlineCode>digitalWrite(7, LOW);</BlogInlineCode> sends 0V to pin 7, turning the LED off
+      <BlogInlineCode>delay(1000);</BlogInlineCode> makes the program wait for another second
+    </OrderedListItem>
+    <OrderedListItem>
+      **Continuous Operation**
+      
+      The loop function repeats indefinitely, creating the blinking effect
+    </OrderedListItem>
+  </OrderedList>
+
+  <BlogCallout type="warning">
+    **Common Mistakes to Avoid:**
+    
+    <BlogList>
+      <BlogListItem>**Missing Semicolons** - Always end your code lines with a semicolon</BlogListItem>
+      <BlogListItem>**State Confusion** - Double-check your HIGH and LOW states are correct</BlogListItem>
+      <BlogListItem>**Pin Numbers** - Verify you're using the correct pin number in your code</BlogListItem>
+      <BlogListItem>**Delay Values** - Make sure your timing values are in milliseconds</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Experiment Ideas
+
+  Now that you've got the basic blink working, try these variations:
+
+  <BlogList>
+    <BlogListItem>**Change the Timing** - Try different delay values to make the LED blink faster or slower</BlogListItem>
+    <BlogListItem>**Add More LEDs** - Connect more LEDs to different pins and create patterns</BlogListItem>
+    <BlogListItem>**Create Sequences** - Make multiple LEDs blink in a specific order</BlogListItem>
+    <BlogListItem>**Morse Code** - Use the blink pattern to spell out messages in Morse code</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Coming Up Next:**
+    
+    In our next episode, we'll explore more complex Arduino projects and programming concepts!
+  </BlogCallout>
+</BlogSection>

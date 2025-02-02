@@ -1,0 +1,203 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogKitSection from '@/components/blog/BlogKitSection';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep1-getting-started-with-arduino');
+
+<BlogHeader 
+  title={metadata.title}
+  description={metadata.description}
+  date={metadata.date}
+  author={metadata.author}
+  tags={metadata.tags}
+/>
+
+<BlogVideo 
+  videoId="L1A8tPrHWfA" 
+  title="Getting Started with Arduino"
+/>
+
+<BlogSection>
+  ## What is Arduino?
+
+  Arduino is an open-source electronics platform based on easy-to-use hardware and software. It's designed for anyone making interactive projects.
+
+  <BlogCallout type="tip">
+    **Perfect for Beginners!**
+    
+    Arduino is designed to be accessible to everyone, regardless of their electronics or programming experience. You can start creating amazing projects with just basic knowledge!
+  </BlogCallout>
+</BlogSection>
+
+<BlogImage 
+  images={[
+    {
+      src: "/images/blog/ep1img1.png",
+      alt: "Arduino Board Overview",
+      caption: "The Arduino Uno board with its main components labeled"
+    }
+  ]}
+/>
+
+<BlogSection accent>
+  ## Your First Arduino Kit
+
+  Before diving into the exciting world of Arduino, you'll need some basic equipment. We've put together a comprehensive starter kit that includes everything you need:
+
+  <BlogKitSection 
+    link="https://amzn.to/3Yv56Jg"
+    title="Get Your Arduino Kit"
+    description="Everything you need to get started with Arduino in one kit. This comprehensive kit includes an Arduino board, breadboard, jumper wires, LEDs, resistors, and more."
+    image="/images/kit.jpg"
+  />
+
+  <BlogCallout type="important">
+    **Why This Kit?**
+    
+    This kit includes all the essential components you'll need for your first projects, carefully selected to ensure compatibility and ease of use. It's the perfect way to start your Arduino journey!
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## The Arduino IDE: Your Creative Workshop
+
+  The Arduino IDE (Integrated Development Environment) is where the magic happens. It's your digital workshop for writing and uploading code to your Arduino board.
+
+  <BlogCallout type="note">
+    The IDE is available for Windows, Mac, and Linux, making it accessible to everyone regardless of their operating system preference.
+  </BlogCallout>
+
+  Here's a glimpse of what your first Arduino code might look like:
+
+  <BlogCode filename="Blink.ino" language="cpp">
+{`void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);    // Initialize built-in LED pin as output
+}
+
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH); // Turn on the LED
+  delay(1000);                     // Wait for a second
+  digitalWrite(LED_BUILTIN, LOW);  // Turn off the LED
+  delay(1000);                     // Wait for a second
+}`}
+  </BlogCode>
+</BlogSection>
+
+<BlogSection accent>
+  ## Understanding Your Arduino Board
+
+  The brain of your Arduino is a microcontroller—a small but powerful computer on a single chip. Let's explore the different Arduino boards available:
+
+  <BlogList>
+    <BlogListItem>**Arduino Uno** - The most popular board for beginners, featuring a robust design and excellent community support</BlogListItem>
+    <BlogListItem>**Arduino Mega** - Perfect for larger projects, offering more pins and memory for complex applications</BlogListItem>
+    <BlogListItem>**Arduino Nano** - A compact powerhouse, ideal for projects where space is at a premium</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="warning">
+    **Choose Wisely!**
+    
+    While all Arduino boards share the same basic principles, each has its strengths. The Uno is recommended for beginners due to its forgiving nature and extensive documentation.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Essential Components
+
+  <BlogSection>
+    ### Digital Pins: Your Board's Input/Output Interface
+    These versatile pins are your primary way to interact with the physical world:
+    <BlogList>
+      <BlogListItem>**Input/Output Flexibility** - Each pin can be configured as input (reading buttons) or output (controlling LEDs)</BlogListItem>
+      <BlogListItem>**Simple Control** - Easy to program with just <BlogInlineCode>digitalWrite()</BlogInlineCode> for outputs and <BlogInlineCode>digitalRead()</BlogInlineCode> for inputs</BlogListItem>
+      <BlogListItem>**Digital Logic** - Operates with HIGH (5V) and LOW (0V) states for clear, reliable control</BlogListItem>
+    </BlogList>
+  </BlogSection>
+
+  <BlogSection>
+    ### Analog Pins: Reading the Real World
+    These special pins allow your Arduino to understand varying signals:
+    <BlogList>
+      <BlogListItem>**Precise Measurements** - Can read 1024 different voltage levels for accurate sensor readings</BlogListItem>
+      <BlogListItem>**Perfect for Sensors** - Ideal for temperature sensors, light sensors, and potentiometers</BlogListItem>
+      <BlogListItem>**Real-world Interface** - Converts continuous physical properties into digital values your code can use</BlogListItem>
+    </BlogList>
+  </BlogSection>
+
+  <BlogSection>
+    ### Power System: Energizing Your Projects
+    The power pins are crucial for bringing your projects to life:
+    <BlogList>
+      <BlogListItem>**5V Output** - The standard power source for most components in your projects</BlogListItem>
+      <BlogListItem>**3.3V Output** - A safer option for sensitive components that can't handle 5V</BlogListItem>
+      <BlogListItem>**Ground (GND)** - Completes the circuit and provides a reference point for all voltage measurements</BlogListItem>
+    </BlogList>
+
+    <BlogCallout type="warning">
+      Always double-check your power connections! Incorrect power connections can damage your components.
+    </BlogCallout>
+  </BlogSection>
+</BlogSection>
+
+<BlogSection accent>
+  ## Your First Arduino Project
+
+  Ready to bring your Arduino to life? Follow these simple steps:
+
+  <OrderedList>
+    <OrderedListItem>
+      **Install the Arduino IDE**
+      
+      Download and install the latest version from the official Arduino website
+    </OrderedListItem>
+    <OrderedListItem>
+      **Write Your First Sketch**
+      
+      Start with the classic "Blink" example to make the built-in LED flash
+    </OrderedListItem>
+    <OrderedListItem>
+      **Connect Your Board**
+      
+      Plug in your Arduino via USB and select the correct board and port in the IDE
+    </OrderedListItem>
+    <OrderedListItem>
+      **Upload and Watch**
+      
+      Click the upload button and watch your code come to life on the board!
+    </OrderedListItem>
+  </OrderedList>
+
+  <BlogCallout type="tip">
+    **Pro Tip:**
+    
+    The Arduino IDE comes with many example sketches. Explore them through File > Examples to learn from well-documented code!
+  </BlogCallout>
+
+  <BlogCode filename="FirstProject.ino" language="cpp">
+{`// Your first Arduino project
+void setup() {
+  Serial.begin(9600);           // Start serial communication
+  pinMode(LED_BUILTIN, OUTPUT); // Set up LED pin
+  
+  Serial.println("Arduino is ready!"); // Send a message
+}
+
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);
+  Serial.println("LED is ON");
+  delay(1000);
+  
+  digitalWrite(LED_BUILTIN, LOW);
+  Serial.println("LED is OFF");
+  delay(1000);
+}`}
+  </BlogCode>
+</BlogSection>

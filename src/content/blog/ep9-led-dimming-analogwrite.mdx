@@ -1,0 +1,204 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogKitSection from '@/components/blog/BlogKitSection';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep9-led-dimming-analogwrite');
+
+<BlogHeader 
+  title={metadata.title}
+  description={metadata.description}
+  date={metadata.date}
+  author={metadata.author}
+  tags={metadata.tags}
+/>
+
+<BlogVideo 
+  videoId="cw9CRyzLeoE" 
+  title="How to Dim an LED with Arduino's analogWrite"
+/>
+
+<BlogSection>
+  ## Understanding analogWrite and PWM
+
+  While <BlogInlineCode>analogWrite</BlogInlineCode> might suggest it produces an analog signal, it actually uses a clever technique called PWM (Pulse Width Modulation) to simulate varying voltages.
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep9img1.jpg",
+        alt: "PWM LED Dimming Demonstration",
+        caption: "Visualizing PWM signals and LED brightness control"
+      }
+    ]}
+  />
+
+  <BlogCallout type="tip">
+    **Think of PWM Like This:**
+    
+    Imagine a light switch being flicked on and off so fast that instead of seeing flickers, you perceive different levels of brightness based on how long the light stays on versus off.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Get Your Arduino Kit
+
+  To follow along with this LED dimming tutorial:
+
+  <BlogKitSection 
+    link="https://amzn.to/3Yv56Jg"
+    title="Get Your Arduino Kit"
+    description="The Elegoo Arduino kit includes LEDs and components needed to experiment with PWM and LED brightness control."
+    image="/images/kit.jpg"
+  />
+</BlogSection>
+
+<BlogSection>
+  ## How PWM Works
+
+  <BlogCallout type="important">
+    **PWM Basics:**
+    
+    PWM creates a digital signal that switches between HIGH (5V) and LOW (0V) very rapidly. The ratio of "on time" to "off time" determines the perceived brightness.
+  </BlogCallout>
+
+  <BlogList>
+    <BlogListItem>**Rapid Switching** - Signal switches between HIGH and LOW at high frequency</BlogListItem>
+    <BlogListItem>**Duty Cycle** - Percentage of time the signal stays HIGH in each cycle</BlogListItem>
+    <BlogListItem>**Perception** - Our eyes see the rapid switching as varying brightness</BlogListItem>
+    <BlogListItem>**Efficiency** - More energy-efficient than true analog voltage control</BlogListItem>
+  </BlogList>
+</BlogSection>
+
+<BlogSection accent>
+  ## Understanding Duty Cycle
+
+  The duty cycle determines the LED's brightness:
+
+  <BlogList>
+    <BlogListItem>**0% Duty Cycle** - LED completely off (<BlogInlineCode>analogWrite(0)</BlogInlineCode>)</BlogListItem>
+    <BlogListItem>**50% Duty Cycle** - LED at half brightness (<BlogInlineCode>analogWrite(127)</BlogInlineCode>)</BlogListItem>
+    <BlogListItem>**100% Duty Cycle** - LED at full brightness (<BlogInlineCode>analogWrite(255)</BlogInlineCode>)</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **8-Bit Resolution:**
+    
+    <BlogList>
+      <BlogListItem>**Value Range** - 0 to 255 (256 different levels)</BlogListItem>
+      <BlogListItem>**Binary** - 8 bits can represent numbers from 0 to 255</BlogListItem>
+      <BlogListItem>**Precision** - Allows for fine control over LED brightness</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Using analogWrite
+
+  Here's how to implement LED dimming:
+
+  <BlogCode filename="LEDDimming.ino" language="cpp">
+{`const int ledPin = 9;  // Must be a PWM pin (~)
+
+void setup() {
+  pinMode(ledPin, OUTPUT);  // Set LED pin as output
+}
+
+void loop() {
+  // Gradually increase brightness
+  for(int brightness = 0; brightness <= 255; brightness++) {
+    analogWrite(ledPin, brightness);
+    delay(10);  // Small delay for visible effect
+  }
+  
+  // Gradually decrease brightness
+  for(int brightness = 255; brightness >= 0; brightness--) {
+    analogWrite(ledPin, brightness);
+    delay(10);
+  }
+}`}
+  </BlogCode>
+
+  <BlogCallout type="warning">
+    **Important Considerations:**
+    
+    <BlogList>
+      <BlogListItem>**PWM Pins** - Only certain pins support PWM (marked with ~)</BlogListItem>
+      <BlogListItem>**Frequency** - PWM frequency varies by pin on Arduino boards</BlogListItem>
+      <BlogListItem>**Current Limits** - Still respect the maximum current ratings</BlogListItem>
+      <BlogListItem>**Resistor Required** - Always use a current-limiting resistor</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Common Applications
+
+  PWM and <BlogInlineCode>analogWrite</BlogInlineCode> are used for:
+
+  <BlogList>
+    <BlogListItem>**LED Effects** - Create smooth fading and breathing effects</BlogListItem>
+    <BlogListItem>**Motor Control** - Adjust motor speed smoothly</BlogListItem>
+    <BlogListItem>**Sound Generation** - Create simple tones and music</BlogListItem>
+    <BlogListItem>**Display Dimming** - Control backlight brightness</BlogListItem>
+  </BlogList>
+
+  <BlogCode filename="BreathingLED.ino" language="cpp">
+{`const int ledPin = 9;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  // Breathing effect using sine wave
+  float val = (exp(sin(millis()/2000.0*PI)) - 0.36787944)*108.0;
+  analogWrite(ledPin, val);
+}`}
+  </BlogCode>
+</BlogSection>
+
+<BlogSection>
+  ## Troubleshooting Tips
+
+  Common issues and solutions:
+
+  <BlogList>
+    <BlogListItem>**LED Not Dimming** - Verify you're using a PWM-capable pin (~)</BlogListItem>
+    <BlogListItem>**Flickering** - Check if your PWM frequency is appropriate</BlogListItem>
+    <BlogListItem>**No Response** - Ensure proper resistor and connections</BlogListItem>
+    <BlogListItem>**Uneven Dimming** - Consider using logarithmic scaling for more natural brightness changes</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="tip">
+    **Pro Tip:**
+    
+    For smoother dimming effects, use more steps in your brightness transitions and consider the human eye's logarithmic perception of brightness.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Looking Ahead
+
+  Now that you understand PWM and LED dimming:
+
+  <BlogList>
+    <BlogListItem>**Advanced Effects** - Create complex lighting patterns</BlogListItem>
+    <BlogListItem>**Multiple LEDs** - Control multiple LEDs with different brightness levels</BlogListItem>
+    <BlogListItem>**RGB Control** - Apply PWM to create custom colors</BlogListItem>
+    <BlogListItem>**Interactive Projects** - Use sensors to control LED brightness</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Coming Up Next:**
+    
+    In our next episode, we'll explore more advanced Arduino programming concepts and create even more exciting projects!
+  </BlogCallout>
+</BlogSection> 

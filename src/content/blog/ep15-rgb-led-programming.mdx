@@ -1,0 +1,315 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogKitSection from '@/components/blog/BlogKitSection';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep15-rgb-led-programming');
+
+<BlogHeader 
+  title={metadata.title}
+  description={metadata.description}
+  date={metadata.date}
+  author={metadata.author}
+  tags={metadata.tags}
+/>
+
+<BlogVideo 
+  videoId="3Ftj4xt-w2k" 
+  title="How to easily program RGB LEDs"
+/>
+
+<BlogSection>
+  ## Introduction to RGB LED Programming
+
+  RGB LEDs are versatile components that can create any color by combining red, green, and blue light. Understanding how to program them effectively opens up endless possibilities for creative lighting projects.
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep15img1.jpg",
+        alt: "RGB LED Color Mixing",
+        caption: "RGB LEDs can create any color by mixing red, green, and blue light"
+      }
+    ]}
+  />
+
+  <BlogCallout type="tip">
+    **Think of RGB LEDs Like This:**
+    
+    Just like mixing primary colors in painting, RGB LEDs mix different intensities of red, green, and blue light to create any color you can imagine!
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Get Your Arduino Kit
+
+  To follow along with this RGB LED programming tutorial:
+
+  <BlogKitSection 
+    link="https://amzn.to/3Yv56Jg"
+    title="Get Your Arduino Kit"
+    description="The Elegoo Arduino kit includes RGB LEDs and all the components needed to create colorful lighting projects."
+    image="/images/kit.jpg"
+  />
+</BlogSection>
+
+<BlogSection>
+  ## Digital Control with digitalWrite
+
+  Let's start with the basics of controlling RGB LEDs using digital signals.
+
+  <BlogCallout type="important">
+    **Key Concepts:**
+    
+    <BlogList>
+      <BlogListItem>**Digital Control** - Simple on/off control of each color channel</BlogListItem>
+      <BlogListItem>**Common Cathode** - Ground is shared, HIGH turns LED on</BlogListItem>
+      <BlogListItem>**Common Anode** - Power is shared, LOW turns LED on</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+
+  ### Common Cathode RGB LED
+
+  <BlogCode filename="CommonCathodeDigital.ino" language="cpp">
+{`int red = 3;
+int green = 5;
+int blue = 6;
+
+void setup() {
+  pinMode(red, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(blue, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(red, HIGH);   // Red on
+  digitalWrite(green, LOW);  // Green off
+  digitalWrite(blue, LOW);   // Blue off
+  delay(1000);
+
+  digitalWrite(red, LOW);    // Red off
+  digitalWrite(green, HIGH); // Green on
+  digitalWrite(blue, LOW);   // Blue off
+  delay(1000);
+
+  digitalWrite(red, LOW);    // Red off
+  digitalWrite(green, LOW);  // Green off
+  digitalWrite(blue, HIGH);  // Blue on
+  delay(1000);
+}`}
+  </BlogCode>
+
+  ### Common Anode RGB LED
+
+  <BlogCode filename="CommonAnodeDigital.ino" language="cpp">
+{`int red = 3;
+int green = 5;
+int blue = 6;
+
+void setup() {
+  pinMode(red, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(blue, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(red, LOW);    // Red on
+  digitalWrite(green, HIGH); // Green off
+  digitalWrite(blue, HIGH);  // Blue off
+  delay(1000);
+
+  digitalWrite(red, HIGH);   // Red off
+  digitalWrite(green, LOW);  // Green on
+  digitalWrite(blue, HIGH);  // Blue off
+  delay(1000);
+
+  digitalWrite(red, HIGH);   // Red off
+  digitalWrite(green, HIGH); // Green off
+  digitalWrite(blue, LOW);   // Blue on
+  delay(1000);
+}`}
+  </BlogCode>
+
+  <BlogCallout type="warning">
+    **Important Considerations:**
+    
+    <BlogList>
+      <BlogListItem>Always use current-limiting resistors for each color channel</BlogListItem>
+      <BlogListItem>Verify whether you have a common cathode or common anode LED</BlogListItem>
+      <BlogListItem>Double-check pin connections before applying power</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Analog Control with analogWrite
+
+  For more sophisticated color control, we can use PWM to create varying intensities of each color.
+
+  <BlogCallout type="note">
+    **PWM Control:**
+    
+    Using <BlogInlineCode>analogWrite</BlogInlineCode> allows us to set 256 different brightness levels (0-255) for each color channel, enabling millions of possible color combinations!
+  </BlogCallout>
+
+  ### Common Cathode RGB LED with PWM
+
+  <BlogCode filename="CommonCathodePWM.ino" language="cpp">
+{`int red = 3;
+int green = 5;
+int blue = 6;
+
+void setup() {
+  pinMode(red, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(blue, OUTPUT);
+}
+
+void loop() {
+  analogWrite(red, 255);   // Red full brightness
+  analogWrite(green, 0);   // Green off
+  analogWrite(blue, 0);    // Blue off
+  delay(1000);
+
+  analogWrite(red, 0);     // Red off
+  analogWrite(green, 255); // Green full brightness
+  analogWrite(blue, 0);    // Blue off
+  delay(1000);
+
+  analogWrite(red, 0);     // Red off
+  analogWrite(green, 0);   // Green off
+  analogWrite(blue, 255);  // Blue full brightness
+  delay(1000);
+}`}
+  </BlogCode>
+
+  ### Common Anode RGB LED with PWM
+
+  <BlogCode filename="CommonAnodePWM.ino" language="cpp">
+{`int red = 3;
+int green = 5;
+int blue = 6;
+
+void setup() {
+  pinMode(red, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(blue, OUTPUT);
+}
+
+void loop() {
+  analogWrite(red, 0);     // Red full brightness
+  analogWrite(green, 255); // Green off
+  analogWrite(blue, 255);  // Blue off
+  delay(1000);
+
+  analogWrite(red, 255);   // Red off
+  analogWrite(green, 0);   // Green full brightness
+  analogWrite(blue, 255);  // Blue off
+  delay(1000);
+
+  analogWrite(red, 255);   // Red off
+  analogWrite(green, 255); // Green off
+  analogWrite(blue, 0);    // Blue full brightness
+  delay(1000);
+}`}
+  </BlogCode>
+</BlogSection>
+
+<BlogSection>
+  ## Tips and Best Practices
+
+  <OrderedList>
+    <OrderedListItem>
+      **Hardware Setup**
+      <BlogList>
+        <BlogListItem>Use appropriate current-limiting resistors (220Ω-330Ω typically)</BlogListItem>
+        <BlogListItem>Connect to PWM-capable pins (marked with ~) for analog control</BlogListItem>
+        <BlogListItem>Verify common anode/cathode configuration before wiring</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+
+    <OrderedListItem>
+      **Programming Practices**
+      <BlogList>
+        <BlogListItem>Initialize all pins in setup()</BlogListItem>
+        <BlogListItem>Use variables for pin numbers for easy modification</BlogListItem>
+        <BlogListItem>Comment your code to document color combinations</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+
+    <OrderedListItem>
+      **Color Mixing**
+      <BlogList>
+        <BlogListItem>Red + Green = Yellow</BlogListItem>
+        <BlogListItem>Red + Blue = Magenta</BlogListItem>
+        <BlogListItem>Green + Blue = Cyan</BlogListItem>
+        <BlogListItem>All Colors = White</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+  </OrderedList>
+
+  <BlogCallout type="tip">
+    **Pro Tip:**
+    
+    Create helper functions for common colors to make your code more organized and reusable!
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Advanced Color Control
+
+  Here's a more sophisticated example that creates smooth color transitions:
+
+  <BlogCode filename="ColorFade.ino" language="cpp">
+{`// For Common Cathode RGB LED
+int red = 3;
+int green = 5;
+int blue = 6;
+
+void setup() {
+  pinMode(red, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(blue, OUTPUT);
+}
+
+// Function to set a specific color
+void setColor(int redValue, int greenValue, int blueValue) {
+  analogWrite(red, redValue);
+  analogWrite(green, greenValue);
+  analogWrite(blue, blueValue);
+}
+
+void loop() {
+  // Fade from red to green
+  for(int i = 0; i <= 255; i++) {
+    setColor(255-i, i, 0);
+    delay(10);
+  }
+  
+  // Fade from green to blue
+  for(int i = 0; i <= 255; i++) {
+    setColor(0, 255-i, i);
+    delay(10);
+  }
+  
+  // Fade from blue to red
+  for(int i = 0; i <= 255; i++) {
+    setColor(i, 0, 255-i);
+    delay(10);
+  }
+}`}
+  </BlogCode>
+
+  <BlogCallout type="note">
+    **Coming Up Next:**
+    
+    In future episodes, we'll explore more advanced topics like creating custom lighting effects and integrating RGB LEDs with sensors!
+  </BlogCallout>
+</BlogSection> 

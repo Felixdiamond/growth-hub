@@ -1,0 +1,252 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogKitSection from '@/components/blog/BlogKitSection';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep11-potentiometer-guide');
+
+<BlogHeader 
+  title={metadata.title}
+  description={metadata.description}
+  date={metadata.date}
+  author={metadata.author}
+  tags={metadata.tags}
+/>
+
+<BlogVideo 
+  videoId="HY6vza6qQZg" 
+  title="How to Use Potentiometers in Arduino Projects"
+/>
+
+<BlogSection>
+  ## Understanding Potentiometers
+
+  A potentiometer (or "pot" for short) is a versatile three-terminal component that functions as an adjustable voltage divider, allowing you to control voltage and current in your circuits with precision.
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep11img1.jpg",
+        alt: "Potentiometer Structure and Usage",
+        caption: "Understanding the structure and functionality of a potentiometer"
+      }
+    ]}
+  />
+
+  <BlogCallout type="tip">
+    **Think of a Potentiometer Like This:**
+    
+    Imagine a water faucet where you can precisely control the flow. Just as the faucet handle controls water flow, the potentiometer's knob controls electrical flow, giving you smooth, precise control over voltage.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Get Your Arduino Kit
+
+  To follow along with this potentiometer tutorial:
+
+  <BlogKitSection 
+    link="https://amzn.to/3Yv56Jg"
+    title="Get Your Arduino Kit"
+    description="The Elegoo Arduino kit includes potentiometers and all the components needed to build voltage-controlled projects."
+    image="/images/kit.jpg"
+  />
+</BlogSection>
+
+<BlogSection>
+  ## How Potentiometers Work
+
+  <BlogCallout type="important">
+    **Core Concepts:**
+    
+    A potentiometer works by moving a wiper contact across a resistive element, creating an adjustable voltage divider that provides variable output based on position.
+  </BlogCallout>
+
+  <OrderedList>
+    <OrderedListItem>
+      **Physical Structure**
+      <BlogList>
+        <BlogListItem>**Three Terminals** - Power (VCC), Ground (GND), and Wiper (Output)</BlogListItem>
+        <BlogListItem>**Resistive Element** - Fixed resistance track</BlogListItem>
+        <BlogListItem>**Wiper** - Moving contact that slides along the resistive element</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+
+    <OrderedListItem>
+      **Electrical Operation**
+      <BlogList>
+        <BlogListItem>**Voltage Division** - Creates proportional voltage based on wiper position</BlogListItem>
+        <BlogListItem>**Linear or Logarithmic** - Different response curves for different applications</BlogListItem>
+        <BlogListItem>**Smooth Control** - Continuous adjustment within its range</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+  </OrderedList>
+</BlogSection>
+
+<BlogSection accent>
+  ## Common Applications
+
+  Potentiometers are used in various applications:
+
+  <BlogList>
+    <BlogListItem>**Volume Control** - Adjust audio levels in sound systems</BlogListItem>
+    <BlogListItem>**Light Dimming** - Control LED or lamp brightness</BlogListItem>
+    <BlogListItem>**Position Sensing** - Create position-based controls like joysticks</BlogListItem>
+    <BlogListItem>**Circuit Tuning** - Calibrate and adjust electronic circuits</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Types of Potentiometers:**
+    
+    <BlogList>
+      <BlogListItem>**Rotary** - Most common, turns like a knob</BlogListItem>
+      <BlogListItem>**Slide** - Linear movement, like audio mixing boards</BlogListItem>
+      <BlogListItem>**Multi-turn** - Precise adjustment over multiple rotations</BlogListItem>
+      <BlogListItem>**Digital** - Electronic version with discrete steps</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Implementation with Arduino
+
+  Here's how to read and use a potentiometer with Arduino:
+
+  <BlogCode filename="PotentiometerReader.ino" language="cpp">
+{`// Pin and variable declarations
+const int potPin = A0;      // Potentiometer connected to analog pin A0
+const int waitTime = 400;   // Delay between readings
+int potValue;              // Store the raw analog reading
+float voltage;             // Store the converted voltage
+
+void setup() {
+  // Configure pin and serial communication
+  pinMode(potPin, INPUT);   // Set potentiometer pin as input
+  Serial.begin(9600);       // Initialize serial communication
+}
+
+void loop() {
+  // Read potentiometer value
+  potValue = analogRead(potPin);
+  
+  // Convert to voltage (0-5V range)
+  voltage = 5.0 / 1023.0 * potValue;
+  
+  // Display readings in Serial Monitor
+  Serial.print("Raw Value: ");
+  Serial.print(potValue);
+  Serial.print(" | Voltage: ");
+  Serial.print(voltage);
+  Serial.println("V");
+  
+  delay(waitTime);
+}`}
+  </BlogCode>
+
+  <BlogCallout type="warning">
+    **Important Considerations:**
+    
+    <BlogList>
+      <BlogListItem>**Wiring** - Ensure correct terminal connections (VCC, GND, and Wiper)</BlogListItem>
+      <BlogListItem>**Noise** - Consider adding a small capacitor for stability</BlogListItem>
+      <BlogListItem>**Resolution** - Remember you have 1024 distinct positions (0-1023)</BlogListItem>
+      <BlogListItem>**Power Supply** - Use a stable 5V source for consistent readings</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Practical Project Ideas
+
+  Here are some projects you can build using potentiometers:
+
+  <BlogList>
+    <BlogListItem>**LED Dimmer** - Control LED brightness</BlogListItem>
+    <BlogListItem>**Servo Controller** - Adjust servo motor position</BlogListItem>
+    <BlogListItem>**Digital Instrument** - Create musical controls</BlogListItem>
+    <BlogListItem>**Game Controller** - Build custom input devices</BlogListItem>
+  </BlogList>
+
+  <BlogCode filename="LEDPotControl.ino" language="cpp">
+{`const int potPin = A0;      // Potentiometer input
+const int ledPin = 9;       // LED output (PWM pin)
+int potValue;              // Potentiometer reading
+int brightness;            // LED brightness value
+
+void setup() {
+  pinMode(potPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  // Read potentiometer
+  potValue = analogRead(potPin);
+  
+  // Map pot value (0-1023) to LED range (0-255)
+  brightness = map(potValue, 0, 1023, 0, 255);
+  
+  // Set LED brightness
+  analogWrite(ledPin, brightness);
+  delay(10);  // Small delay for stability
+}`}
+  </BlogCode>
+</BlogSection>
+
+<BlogSection>
+  ## Troubleshooting Tips
+
+  Common issues and solutions:
+
+  <BlogList>
+    <BlogListItem>**Jumpy Readings** - Add a smoothing capacitor (0.1µF)</BlogListItem>
+    <BlogListItem>**Dead Spots** - Check for worn-out potentiometer or poor connections</BlogListItem>
+    <BlogListItem>**Inconsistent Values** - Ensure stable power supply and good wiring</BlogListItem>
+    <BlogListItem>**Non-linear Response** - Consider using a different pot type (linear vs. logarithmic)</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="tip">
+    **Pro Tip:**
+    
+    For more stable readings, implement a simple moving average:
+    
+    <BlogCode filename="Smoothing.ino" language="cpp">
+{`const int numReadings = 10;
+int readings[numReadings];
+int readIndex = 0;
+int total = 0;
+
+// In loop():
+total = total - readings[readIndex];
+readings[readIndex] = analogRead(potPin);
+total = total + readings[readIndex];
+readIndex = (readIndex + 1) % numReadings;
+int average = total / numReadings;`}
+    </BlogCode>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Looking Ahead
+
+  Now that you understand potentiometers:
+
+  <BlogList>
+    <BlogListItem>**Advanced Projects** - Create complex control interfaces</BlogListItem>
+    <BlogListItem>**Sensor Combinations** - Combine with other sensors for rich interactions</BlogListItem>
+    <BlogListItem>**Custom Controllers** - Build specialized input devices</BlogListItem>
+    <BlogListItem>**Calibration Tools** - Develop precision measurement instruments</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Coming Up Next:**
+    
+    Stay tuned for more exciting Arduino tutorials where we'll explore more components and create even more interesting projects!
+  </BlogCallout>
+</BlogSection> 

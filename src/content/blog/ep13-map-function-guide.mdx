@@ -1,0 +1,242 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogKitSection from '@/components/blog/BlogKitSection';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep13-map-function-guide');
+
+<BlogHeader 
+  title={metadata.title}
+  description={metadata.description}
+  date={metadata.date}
+  author={metadata.author}
+  tags={metadata.tags}
+/>
+
+<BlogVideo 
+  videoId="LvQshNMl25Q" 
+  title="How to Use the map() function on the Arduino"
+/>
+
+<BlogSection>
+  ## Understanding the map() Function
+
+  The <BlogInlineCode>map()</BlogInlineCode> function is a powerful tool in Arduino that allows you to convert values from one range to another, making it easier to work with sensors and create intuitive outputs.
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep13img1.jpg",
+        alt: "Arduino map() Function Visualization",
+        caption: "Understanding how map() converts values between different ranges"
+      }
+    ]}
+  />
+
+  <BlogCallout type="tip">
+    **Think of map() Like This:**
+    
+    Imagine you're converting temperatures between Celsius and Fahrenheit. Just as you use a formula to convert between temperature scales, map() helps you convert between any two ranges of numbers.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Get Your Arduino Kit
+
+  To follow along with this mapping tutorial:
+
+  <BlogKitSection 
+    link="https://amzn.to/3Yv56Jg"
+    title="Get Your Arduino Kit"
+    description="The Elegoo Arduino kit includes various sensors and components perfect for experimenting with the map() function."
+    image="/images/kit.jpg"
+  />
+</BlogSection>
+
+<BlogSection>
+  ## How map() Works
+
+  <BlogCallout type="important">
+    **Function Syntax:**
+    
+    <BlogCode filename="MapSyntax.txt" language="cpp">
+{`map(value, fromLow, fromHigh, toLow, toHigh)`}
+    </BlogCode>
+  </BlogCallout>
+
+  <OrderedList>
+    <OrderedListItem>
+      **Parameters Explained**
+      <BlogList>
+        <BlogListItem>**value** - The number to convert</BlogListItem>
+        <BlogListItem>**fromLow** - Lower bound of current range</BlogListItem>
+        <BlogListItem>**fromHigh** - Upper bound of current range</BlogListItem>
+        <BlogListItem>**toLow** - Lower bound of target range</BlogListItem>
+        <BlogListItem>**toHigh** - Upper bound of target range</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+
+    <OrderedListItem>
+      **Return Value**
+      <BlogList>
+        <BlogListItem>Returns the mapped number in the new range</BlogListItem>
+        <BlogListItem>Result is a long integer</BlogListItem>
+        <BlogListItem>Can handle negative numbers and reversed ranges</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+  </OrderedList>
+</BlogSection>
+
+<BlogSection accent>
+  ## Common Use Cases
+
+  The <BlogInlineCode>map()</BlogInlineCode> function is particularly useful for:
+
+  <BlogList>
+    <BlogListItem>**Sensor Readings** - Convert raw sensor values to meaningful units</BlogListItem>
+    <BlogListItem>**LED Control** - Scale values for brightness control</BlogListItem>
+    <BlogListItem>**Servo Control** - Convert angles to pulse widths</BlogListItem>
+    <BlogListItem>**Display Scaling** - Adapt values for different display ranges</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Real-World Examples:**
+    
+    <BlogList>
+      <BlogListItem>Potentiometer (0-1023) → LED brightness (0-255)</BlogListItem>
+      <BlogListItem>Temperature sensor (0-1023) → Celsius (-40 to 125)</BlogListItem>
+      <BlogListItem>Joystick (0-1023) → Servo angle (0-180)</BlogListItem>
+      <BlogListItem>Light sensor (0-1023) → Percentage (0-100)</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Practical Examples
+
+  Here are some practical implementations of the map() function:
+
+  <BlogCode filename="PotentiometerToLED.ino" language="cpp">
+{`// LED brightness control using potentiometer
+const int potPin = A0;
+const int ledPin = 9;
+
+void setup() {
+  pinMode(potPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int potValue = analogRead(potPin);
+  // Map potentiometer range (0-1023) to LED range (0-255)
+  int brightness = map(potValue, 0, 1023, 0, 255);
+  
+  analogWrite(ledPin, brightness);
+  
+  Serial.print("Pot Value: ");
+  Serial.print(potValue);
+  Serial.print(" → LED Value: ");
+  Serial.println(brightness);
+  delay(100);
+}`}
+  </BlogCode>
+
+  <BlogCode filename="TemperatureSensor.ino" language="cpp">
+{`// Temperature sensor reading with mapping
+const int tempPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int sensorValue = analogRead(tempPin);
+  // Map sensor range to temperature in Celsius
+  int tempC = map(sensorValue, 0, 1023, -40, 125);
+  
+  Serial.print("Temperature: ");
+  Serial.print(tempC);
+  Serial.println("°C");
+  delay(1000);
+}`}
+  </BlogCode>
+</BlogSection>
+
+<BlogSection accent>
+  ## Advanced Techniques
+
+  Here are some advanced ways to use map():
+
+  <BlogList>
+    <BlogListItem>**Floating-Point Mapping** - For more precise conversions</BlogListItem>
+    <BlogListItem>**Constrained Mapping** - Combine with constrain() function</BlogListItem>
+    <BlogListItem>**Reverse Mapping** - Use inverted ranges for reverse control</BlogListItem>
+    <BlogListItem>**Multi-Stage Mapping** - Chain multiple map() calls</BlogListItem>
+  </BlogList>
+
+  <BlogCode filename="AdvancedMapping.ino" language="cpp">
+{`// Floating-point mapping function
+float mapFloat(float x, float in_min, float in_max, float out_min, float out_max) {
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+// Example usage with constrain
+int value = analogRead(A0);
+int mapped = map(value, 0, 1023, 0, 255);
+int constrained = constrain(mapped, 0, 255);  // Ensures value stays in range
+
+// Reverse mapping example
+int reversed = map(value, 0, 1023, 255, 0);  // Inverted output range`}
+  </BlogCode>
+</BlogSection>
+
+<BlogSection>
+  ## Common Pitfalls and Solutions
+
+  Watch out for these common issues:
+
+  <BlogList>
+    <BlogListItem>**Integer Rounding** - Use float mapping for precision</BlogListItem>
+    <BlogListItem>**Out-of-Range Values** - Add constrain() for safety</BlogListItem>
+    <BlogListItem>**Zero Division** - Ensure input range isn't zero</BlogListItem>
+    <BlogListItem>**Overflow** - Use long integers for large numbers</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="warning">
+    **Important Considerations:**
+    
+    <BlogList>
+      <BlogListItem>map() returns a long integer, which may need casting</BlogListItem>
+      <BlogListItem>Input values outside the from range will be extrapolated</BlogListItem>
+      <BlogListItem>The function doesn't constrain results automatically</BlogListItem>
+      <BlogListItem>Integer math may cause rounding errors</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Project Ideas
+
+  Try these projects to practice using map():
+
+  <BlogList>
+    <BlogListItem>**Light-Responsive LED** - Map light sensor to LED brightness</BlogListItem>
+    <BlogListItem>**Custom Thermometer** - Convert sensor readings to temperature</BlogListItem>
+    <BlogListItem>**Servo Controller** - Map potentiometer to servo positions</BlogListItem>
+    <BlogListItem>**Battery Monitor** - Convert voltage readings to percentage</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Coming Up Next:**
+    
+    Stay tuned for more exciting Arduino tutorials where we'll explore more functions and create even more interesting projects!
+  </BlogCallout>
+</BlogSection> 

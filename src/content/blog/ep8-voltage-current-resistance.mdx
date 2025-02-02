@@ -1,0 +1,204 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogKitSection from '@/components/blog/BlogKitSection';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep8-voltage-current-resistance');
+
+<BlogHeader 
+  title={metadata.title}
+  description={metadata.description}
+  date={metadata.date}
+  author={metadata.author}
+  tags={metadata.tags}
+/>
+
+<BlogVideo 
+  videoId="2HAkTx_RPNc" 
+  title="Voltage, Current and Resistance"
+/>
+
+<BlogSection>
+  ## Understanding Electronics Fundamentals
+
+  To work effectively with Arduino and electronics, you need to understand three fundamental concepts: voltage, current, and resistance. Let's explore these through simple analogies.
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep8img1.jpg",
+        alt: "Electronics Fundamentals Diagram",
+        caption: "Visual representation of voltage, current, and resistance in a circuit"
+      }
+    ]}
+  />
+
+  <BlogCallout type="tip">
+    **Learning Through Analogy:**
+    
+    Think of an electronic circuit like a water system - it makes these concepts much easier to understand!
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Get Your Arduino Kit
+
+  To follow along with our tutorials and experiment with these concepts:
+
+  <BlogKitSection 
+    link="https://amzn.to/3Yv56Jg"
+    title="Get Your Arduino Kit"
+    description="The Elegoo Arduino kit includes components needed to learn and experiment with voltage, current, and resistance."
+    image="/images/kit.jpg"
+  />
+</BlogSection>
+
+<BlogSection>
+  ## Voltage (V)
+
+  <BlogCallout type="important">
+    **What is Voltage?**
+    
+    Voltage is the electrical pressure or force that pushes electric charges through a circuit.
+  </BlogCallout>
+
+  <BlogList>
+    <BlogListItem>**Water Analogy** - Like water pressure in a hose</BlogListItem>
+    <BlogListItem>**Measurement** - Measured in Volts (V)</BlogListItem>
+    <BlogListItem>**Power Source** - Provided by batteries or power supplies</BlogListItem>
+    <BlogListItem>**Arduino** - Most Arduino boards use 5V or 3.3V</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    Just as higher water pressure pushes water more forcefully, higher voltage pushes electric charges with more force.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Current (I)
+
+  <BlogCallout type="important">
+    **What is Current?**
+    
+    Current is the flow of electric charges through a circuit, similar to water flowing through a pipe.
+  </BlogCallout>
+
+  <BlogList>
+    <BlogListItem>**Water Analogy** - Like the rate of water flow</BlogListItem>
+    <BlogListItem>**Measurement** - Measured in Amperes (A) or milliamps (mA)</BlogListItem>
+    <BlogListItem>**Flow Direction** - Moves from higher to lower voltage</BlogListItem>
+    <BlogListItem>**Arduino** - Most Arduino pins can handle up to 20mA</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="warning">
+    **Safety Note:**
+    
+    Too much current can damage components or create safety hazards. Always use appropriate resistors!
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Resistance (R)
+
+  <BlogCallout type="important">
+    **What is Resistance?**
+    
+    Resistance is the opposition to current flow in a circuit, like a narrow section in a water pipe.
+  </BlogCallout>
+
+  <BlogList>
+    <BlogListItem>**Water Analogy** - Like a bottleneck in the pipe</BlogListItem>
+    <BlogListItem>**Measurement** - Measured in Ohms (Ω)</BlogListItem>
+    <BlogListItem>**Purpose** - Controls current flow and protects components</BlogListItem>
+    <BlogListItem>**Components** - Resistors are the most common way to add resistance</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    Common resistor values in Arduino projects range from 220Ω to 10kΩ.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Ohm's Law
+
+  The relationship between voltage, current, and resistance is defined by Ohm's Law:
+
+  <BlogCallout type="important">
+    **V = I × R**
+    
+    <BlogList>
+      <BlogListItem>**V** - Voltage in Volts (V)</BlogListItem>
+      <BlogListItem>**I** - Current in Amperes (A)</BlogListItem>
+      <BlogListItem>**R** - Resistance in Ohms (Ω)</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+
+  <BlogCallout type="tip">
+    **Quick Calculations:**
+    
+    <BlogList>
+      <BlogListItem>**Find Voltage:** V = I × R</BlogListItem>
+      <BlogListItem>**Find Current:** I = V ÷ R</BlogListItem>
+      <BlogListItem>**Find Resistance:** R = V ÷ I</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Practical Example
+
+  Let's calculate the current through an LED circuit:
+
+  <OrderedList>
+    <OrderedListItem>
+      **Given Values**
+      
+      <BlogList>
+        <BlogListItem>**Arduino Voltage** - 5V from the board</BlogListItem>
+        <BlogListItem>**LED Resistor** - 220Ω protection resistor</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+    <OrderedListItem>
+      **Calculate Current**
+      
+      I = V ÷ R = 5V ÷ 220Ω ≈ 0.023A or 23mA
+    </OrderedListItem>
+    <OrderedListItem>
+      **Check Safety**
+      
+      23mA is slightly above the recommended 20mA, so we might want to use a 330Ω resistor instead
+    </OrderedListItem>
+  </OrderedList>
+
+  <BlogCallout type="warning">
+    **Component Protection:**
+    
+    Always include appropriate resistors to protect LEDs and other components from excessive current.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Common Applications
+
+  Understanding these concepts helps you:
+
+  <BlogList>
+    <BlogListItem>**LED Projects** - Calculate correct resistor values</BlogListItem>
+    <BlogListItem>**Sensor Reading** - Understand voltage dividers</BlogListItem>
+    <BlogListItem>**Circuit Design** - Create safe and efficient circuits</BlogListItem>
+    <BlogListItem>**Troubleshooting** - Identify and fix circuit problems</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Coming Up Next:**
+    
+    In our next episode, we'll apply these concepts to build more complex Arduino projects!
+  </BlogCallout>
+</BlogSection> 

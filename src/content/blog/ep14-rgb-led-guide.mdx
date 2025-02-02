@@ -1,0 +1,280 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogKitSection from '@/components/blog/BlogKitSection';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep14-rgb-led-guide');
+
+<BlogHeader 
+  title={metadata.title}
+  description={metadata.description}
+  date={metadata.date}
+  author={metadata.author}
+  tags={metadata.tags}
+/>
+
+<BlogVideo 
+  videoId="ZwI1vIHTO78" 
+  title="How Common Anode and Cathode RGB LEDs work"
+/>
+
+<BlogSection>
+  ## Understanding RGB LEDs
+
+  RGB LEDs combine three individual LEDs (Red, Green, and Blue) in a single package, allowing you to create any color by mixing these primary colors at different intensities.
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep14img1.jpg",
+        alt: "RGB LED Types and Configurations",
+        caption: "Common Anode vs Common Cathode RGB LED configurations"
+      }
+    ]}
+  />
+
+  <BlogCallout type="tip">
+    **Think of RGB LEDs Like This:**
+    
+    Imagine mixing paint colors - just as you combine red, green, and blue paint to create different colors, an RGB LED mixes different intensities of colored light to create any color you want.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Get Your Arduino Kit
+
+  To follow along with this RGB LED tutorial:
+
+  <BlogKitSection 
+    link="https://amzn.to/3Yv56Jg"
+    title="Get Your Arduino Kit"
+    description="The Elegoo Arduino kit includes RGB LEDs and all the components needed to create colorful lighting projects."
+    image="/images/kit.jpg"
+  />
+</BlogSection>
+
+<BlogSection>
+  ## Common Cathode RGB LEDs
+
+  <BlogCallout type="important">
+    **Key Features:**
+    
+    Common cathode RGB LEDs share a single negative (ground) connection, with separate control pins for each color.
+  </BlogCallout>
+
+  <OrderedList>
+    <OrderedListItem>
+      **Pin Configuration**
+      <BlogList>
+        <BlogListItem>Four pins total: one common cathode and three color pins</BlogListItem>
+        <BlogListItem>Common cathode connects to Arduino GND</BlogListItem>
+        <BlogListItem>Color pins connect to PWM pins through resistors</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+
+    <OrderedListItem>
+      **Advantages**
+      <BlogList>
+        <BlogListItem>More commonly available</BlogListItem>
+        <BlogListItem>Straightforward programming logic (higher value = brighter)</BlogListItem>
+        <BlogListItem>Compatible with most LED libraries</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+  </OrderedList>
+
+  <BlogCode filename="CommonCathodeRGB.ino" language="cpp">
+{`// Pin definitions for common cathode RGB LED
+const int redPin = 9;    // PWM pin for red
+const int greenPin = 10; // PWM pin for green
+const int bluePin = 11;  // PWM pin for blue
+
+void setup() {
+  // Set all color pins as outputs
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+}
+
+void loop() {
+  // Example: Create purple color (red + blue)
+  analogWrite(redPin, 255);   // Full red
+  analogWrite(greenPin, 0);   // No green
+  analogWrite(bluePin, 255);  // Full blue
+  delay(1000);
+  
+  // Turn off all colors
+  analogWrite(redPin, 0);
+  analogWrite(greenPin, 0);
+  analogWrite(bluePin, 0);
+  delay(1000);
+}`}
+  </BlogCode>
+</BlogSection>
+
+<BlogSection accent>
+  ## Common Anode RGB LEDs
+
+  <BlogCallout type="important">
+    **Key Features:**
+    
+    Common anode RGB LEDs share a single positive connection, with separate control pins for each color that work with inverted logic.
+  </BlogCallout>
+
+  <OrderedList>
+    <OrderedListItem>
+      **Pin Configuration**
+      <BlogList>
+        <BlogListItem>Four pins total: one common anode and three color pins</BlogListItem>
+        <BlogListItem>Common anode connects to Arduino 5V</BlogListItem>
+        <BlogListItem>Color pins connect to PWM pins through resistors</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+
+    <OrderedListItem>
+      **Special Considerations**
+      <BlogList>
+        <BlogListItem>Inverted logic (0 = full brightness, 255 = off)</BlogListItem>
+        <BlogListItem>May require code modification for LED libraries</BlogListItem>
+        <BlogListItem>Less common but equally capable</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+  </OrderedList>
+
+  <BlogCode filename="CommonAnodeRGB.ino" language="cpp">
+{`// Pin definitions for common anode RGB LED
+const int redPin = 9;    // PWM pin for red
+const int greenPin = 10; // PWM pin for green
+const int bluePin = 11;  // PWM pin for blue
+
+void setup() {
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+}
+
+void loop() {
+  // Example: Create purple color (red + blue)
+  // Note the inverted values (255 - desired brightness)
+  analogWrite(redPin, 0);     // Full red (inverted)
+  analogWrite(greenPin, 255); // No green (inverted)
+  analogWrite(bluePin, 0);    // Full blue (inverted)
+  delay(1000);
+  
+  // Turn off all colors (all pins HIGH)
+  analogWrite(redPin, 255);
+  analogWrite(greenPin, 255);
+  analogWrite(bluePin, 255);
+  delay(1000);
+}`}
+  </BlogCode>
+</BlogSection>
+
+<BlogSection>
+  ## Color Mixing Function
+
+  Here's a helpful function for creating colors with either type of RGB LED:
+
+  <BlogCode filename="ColorMixing.ino" language="cpp">
+{`// Function to set RGB color (works with both types)
+void setColor(int red, int green, int blue, bool isCommonAnode = false) {
+  // Invert values for common anode
+  if (isCommonAnode) {
+    red = 255 - red;
+    green = 255 - green;
+    blue = 255 - blue;
+  }
+  
+  analogWrite(redPin, red);
+  analogWrite(greenPin, green);
+  analogWrite(bluePin, blue);
+}
+
+// Example usage:
+// For common cathode:
+setColor(255, 0, 255, false);  // Purple
+// For common anode:
+setColor(255, 0, 255, true);   // Purple`}
+  </BlogCode>
+
+  <BlogCallout type="warning">
+    **Important Considerations:**
+    
+    <BlogList>
+      <BlogListItem>**Current Limiting** - Always use appropriate resistors (220Ω-330Ω)</BlogListItem>
+      <BlogListItem>**PWM Pins** - Use only PWM-capable pins for color control</BlogListItem>
+      <BlogListItem>**Power Supply** - Consider power requirements for full brightness</BlogListItem>
+      <BlogListItem>**Heat Management** - Avoid running at full brightness for extended periods</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Common Color Combinations
+
+  Here are some popular RGB color values:
+
+  <BlogList>
+    <BlogListItem>**Red** - (255, 0, 0)</BlogListItem>
+    <BlogListItem>**Green** - (0, 255, 0)</BlogListItem>
+    <BlogListItem>**Blue** - (0, 0, 255)</BlogListItem>
+    <BlogListItem>**Yellow** - (255, 255, 0)</BlogListItem>
+    <BlogListItem>**Cyan** - (0, 255, 255)</BlogListItem>
+    <BlogListItem>**Magenta** - (255, 0, 255)</BlogListItem>
+    <BlogListItem>**White** - (255, 255, 255)</BlogListItem>
+    <BlogListItem>**Orange** - (255, 165, 0)</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="tip">
+    **Pro Tip:**
+    
+    Create smooth color transitions using the map() function we learned in the previous lesson:
+    
+    <BlogCode filename="ColorFade.ino" language="cpp">
+{`// Smooth color transition
+for(int i = 0; i < 255; i++) {
+  // Fade from red to blue
+  setColor(255-i, 0, i, isCommonAnode);
+  delay(10);
+}`}
+    </BlogCode>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Troubleshooting Tips
+
+  Common issues and solutions:
+
+  <BlogList>
+    <BlogListItem>**Wrong Colors** - Double-check LED type and pin connections</BlogListItem>
+    <BlogListItem>**Dim Output** - Verify resistor values and power supply</BlogListItem>
+    <BlogListItem>**Flickering** - Ensure stable power supply and proper PWM frequency</BlogListItem>
+    <BlogListItem>**No Light** - Check LED orientation and common pin connection</BlogListItem>
+  </BlogList>
+</BlogSection>
+
+<BlogSection accent>
+  ## Project Ideas
+
+  Try these projects with RGB LEDs:
+
+  <BlogList>
+    <BlogListItem>**Mood Lamp** - Create ambient lighting with smooth color transitions</BlogListItem>
+    <BlogListItem>**Color Organ** - Sync colors to music or sound</BlogListItem>
+    <BlogListItem>**Temperature Indicator** - Display temperature ranges with colors</BlogListItem>
+    <BlogListItem>**Interactive Art** - Use sensors to control colors</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Coming Up Next:**
+    
+    Stay tuned for more exciting Arduino tutorials where we'll explore more components and create even more colorful projects!
+  </BlogCallout>
+</BlogSection> 

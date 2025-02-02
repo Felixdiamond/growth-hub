@@ -1,0 +1,245 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogKitSection from '@/components/blog/BlogKitSection';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep12-led-potentiometer-dimming');
+
+<BlogHeader 
+  title={metadata.title}
+  description={metadata.description}
+  date={metadata.date}
+  author={metadata.author}
+  tags={metadata.tags}
+/>
+
+<BlogVideo 
+  videoId="C6YKfjDhguY" 
+  title="How to Dim an LED using the Potentiometer"
+/>
+
+<BlogSection>
+  ## Combining Analog Input with PWM Output
+
+  In this project, we'll combine what we've learned about potentiometers and LED dimming to create a smooth, adjustable LED brightness control system.
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep12img1.jpg",
+        alt: "LED Dimming with Potentiometer Setup",
+        caption: "Creating an adjustable LED brightness control using a potentiometer"
+      }
+    ]}
+  />
+
+  <BlogCallout type="tip">
+    **Think of This Project Like:**
+    
+    Imagine creating your own custom light dimmer switch, where turning the potentiometer knob smoothly adjusts the LED brightness from completely off to full brightness.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Get Your Arduino Kit
+
+  To build this LED dimming project:
+
+  <BlogKitSection 
+    link="https://amzn.to/3Yv56Jg"
+    title="Get Your Arduino Kit"
+    description="The Elegoo Arduino kit includes LEDs, potentiometers, and all the components needed to create this adjustable LED dimming project."
+    image="/images/kit.jpg"
+  />
+</BlogSection>
+
+<BlogSection>
+  ## Understanding the Components
+
+  <BlogCallout type="important">
+    **Key Concepts:**
+    
+    This project combines analog input (potentiometer) with PWM output (LED) through a value conversion process.
+  </BlogCallout>
+
+  <OrderedList>
+    <OrderedListItem>
+      **Potentiometer Input**
+      <BlogList>
+        <BlogListItem>Acts as a variable resistor</BlogListItem>
+        <BlogListItem>Provides analog values from 0 to 1023</BlogListItem>
+        <BlogListItem>Connected to analog pin A0</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+
+    <OrderedListItem>
+      **LED Output**
+      <BlogList>
+        <BlogListItem>Requires PWM pin for dimming (pin 9)</BlogListItem>
+        <BlogListItem>Accepts values from 0 to 255</BlogListItem>
+        <BlogListItem>Creates smooth brightness transitions</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+  </OrderedList>
+</BlogSection>
+
+<BlogSection accent>
+  ## Value Conversion Formula
+
+  <BlogCallout type="note">
+    **Understanding the Math:**
+    
+    We need to convert the potentiometer's 10-bit range (0-1023) to the LED's 8-bit range (0-255).
+  </BlogCallout>
+
+  The conversion formula:
+
+  <BlogCode filename="ValueConversion.txt" language="text">
+{`LED Value = (255/1023) × Potentiometer Value
+
+This formula is derived from:
+1. Two points method: (0,0) and (1023,255)
+2. Using the gradient formula: (y2-y1)/(x2-x1)
+3. Slope = 255/1023
+
+Example:
+- Pot at middle (511) → LED = (255/1023) × 511 ≈ 127
+- Pot at max (1023) → LED = (255/1023) × 1023 = 255
+- Pot at min (0) → LED = (255/1023) × 0 = 0`}
+  </BlogCode>
+</BlogSection>
+
+<BlogSection>
+  ## Implementation
+
+  Here's the complete code for the LED dimming project:
+
+  <BlogCode filename="PotentiometerLEDDimmer.ino" language="cpp">
+{`// Pin and variable declarations
+const int potPin = A0;     // Potentiometer input pin
+const int ledPin = 9;      // LED output pin (must be PWM)
+const int wait = 500;      // Delay between readings
+int potValue;             // Store potentiometer reading
+int ledValue;             // Store calculated LED brightness
+
+void setup() {
+  // Configure pins and serial communication
+  pinMode(potPin, INPUT);    // Set potentiometer pin as input
+  pinMode(ledPin, OUTPUT);   // Set LED pin as output
+  Serial.begin(9600);        // Initialize serial monitor
+}
+
+void loop() {
+  // Read potentiometer value
+  potValue = analogRead(potPin);
+  
+  // Convert to LED brightness (0-255)
+  ledValue = (255.0/1023.0) * potValue;
+  
+  // Display the calculated LED value
+  Serial.println(ledValue);
+  
+  // Update LED brightness
+  analogWrite(ledPin, ledValue);
+  
+  // Small delay for stability
+  delay(wait);
+}`}
+  </BlogCode>
+
+  <BlogCallout type="warning">
+    **Important Considerations:**
+    
+    <BlogList>
+      <BlogListItem>**PWM Pin** - LED must be connected to a PWM-capable pin (~)</BlogListItem>
+      <BlogListItem>**Current Limiting** - Don't forget the LED current-limiting resistor</BlogListItem>
+      <BlogListItem>**Smooth Motion** - Reduce delay for smoother dimming response</BlogListItem>
+      <BlogListItem>**Floating Values** - Ensure potentiometer is properly connected</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Circuit Setup
+
+  Follow these steps to build the circuit:
+
+  <OrderedList>
+    <OrderedListItem>
+      **Potentiometer Connections**
+      <BlogList>
+        <BlogListItem>Outside pin 1 → 5V</BlogListItem>
+        <BlogListItem>Outside pin 2 → GND</BlogListItem>
+        <BlogListItem>Middle pin (wiper) → A0</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+
+    <OrderedListItem>
+      **LED Connections**
+      <BlogList>
+        <BlogListItem>Anode (+) → 220Ω resistor → Pin 9</BlogListItem>
+        <BlogListItem>Cathode (-) → GND</BlogListItem>
+      </BlogList>
+    </OrderedListItem>
+  </OrderedList>
+</BlogSection>
+
+<BlogSection>
+  ## Troubleshooting Tips
+
+  Common issues and solutions:
+
+  <BlogList>
+    <BlogListItem>**LED Not Dimming** - Verify PWM pin connection and resistor value</BlogListItem>
+    <BlogListItem>**Erratic Behavior** - Check potentiometer connections and wiring</BlogListItem>
+    <BlogListItem>**Delayed Response** - Reduce the delay value in the code</BlogListItem>
+    <BlogListItem>**Flickering** - Add a small capacitor across the LED</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="tip">
+    **Pro Tip:**
+    
+    For even smoother dimming, you can implement a moving average for the potentiometer readings:
+    
+    <BlogCode filename="SmoothDimming.ino" language="cpp">
+{`const int numReadings = 5;
+int readings[numReadings];
+int readIndex = 0;
+int total = 0;
+
+// In loop():
+total = total - readings[readIndex];
+readings[readIndex] = analogRead(potPin);
+total = total + readings[readIndex];
+readIndex = (readIndex + 1) % numReadings;
+int smoothedValue = total / numReadings;
+ledValue = (255.0/1023.0) * smoothedValue;`}
+    </BlogCode>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Project Extensions
+
+  Take this project further with these ideas:
+
+  <BlogList>
+    <BlogListItem>**Multiple LEDs** - Control several LEDs with different brightness levels</BlogListItem>
+    <BlogListItem>**Color Mixing** - Use RGB LEDs for color control</BlogListItem>
+    <BlogListItem>**Pattern Generator** - Create automated dimming patterns</BlogListItem>
+    <BlogListItem>**Interactive Display** - Add an LCD to show brightness levels</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Coming Up Next:**
+    
+    Stay tuned for more exciting Arduino tutorials where we'll explore more components and create even more interesting projects!
+  </BlogCallout>
+</BlogSection> 

@@ -1,0 +1,222 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogKitSection from '@/components/blog/BlogKitSection';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep5-master-led-programming');
+
+<BlogHeader 
+  title={metadata.title}
+  description={metadata.description}
+  date={metadata.date}
+  author={metadata.author}
+  tags={metadata.tags}
+/>
+
+<BlogVideo 
+  videoId="omzakdj26VM" 
+  title="Master Programming LEDs with an Arduino"
+/>
+
+<BlogSection>
+  ## Advanced LED Programming
+
+  Building on our basic LED blinking project, we'll now create more complex patterns and learn better control over timing. This project will help you understand how to create sophisticated LED behaviors.
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep5img1.jpg",
+        alt: "Advanced LED Circuit Setup",
+        caption: "Advanced LED circuit setup for creating complex blinking patterns"
+      }
+    ]}
+  />
+
+  <BlogCallout type="tip">
+    **Project Goal:**
+    
+    We'll create a pattern where the LED blinks three times in succession, followed by longer on and off states, creating an interesting visual rhythm.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Required Components
+
+  To follow along with this tutorial, you'll need your Arduino kit:
+
+  <BlogKitSection 
+    link="https://amzn.to/3Yv56Jg"
+    title="Get Your Arduino Kit"
+    description="This comprehensive kit includes everything you need for creating advanced LED projects and mastering Arduino programming."
+    image="/images/kit.jpg"
+  />
+
+  <BlogCallout type="important">
+    **Component Check:**
+    
+    <BlogList>
+      <BlogListItem>**Arduino Board** - Your main control center</BlogListItem>
+      <BlogListItem>**LED** - Any color LED will work for this project</BlogListItem>
+      <BlogListItem>**220Ω Resistor** - For LED protection</BlogListItem>
+      <BlogListItem>**Breadboard** - For easy circuit assembly</BlogListItem>
+      <BlogListItem>**Jumper Wires** - To connect components</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Key Programming Concepts
+
+  Let's review the essential functions we'll be using:
+
+  <BlogList>
+    <BlogListItem>
+      **pinMode()** - Sets pin mode to INPUT or OUTPUT
+      <BlogInlineCode>pinMode(7, OUTPUT);</BlogInlineCode>
+    </BlogListItem>
+    <BlogListItem>
+      **digitalWrite()** - Controls component state (HIGH/LOW)
+      <BlogInlineCode>digitalWrite(7, HIGH);</BlogInlineCode>
+    </BlogListItem>
+    <BlogListItem>
+      **delay()** - Creates timing pauses in milliseconds
+      <BlogInlineCode>delay(1000); // 1 second pause</BlogInlineCode>
+    </BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Time Units:**
+    
+    <BlogList>
+      <BlogListItem>**1000ms** - One full second</BlogListItem>
+      <BlogListItem>**100ms** - One-tenth of a second</BlogListItem>
+      <BlogListItem>**5000ms** - Five seconds</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Advanced Blinking Pattern
+
+  Here's our code for creating a more complex LED pattern:
+
+  <BlogCode filename="AdvancedBlink.ino" language="cpp">
+{`void setup() {
+  // put your setup code here, to run once:
+  pinMode(7, OUTPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  digitalWrite(7, LOW);   // LED off
+  delay(1000);           // Wait 1 second
+  digitalWrite(7, HIGH);  // LED on
+  delay(1000);           // Wait 1 second
+
+  digitalWrite(7, LOW);   // Second blink
+  delay(1000);
+  digitalWrite(7, HIGH);
+  delay(1000);
+
+  digitalWrite(7, LOW);   // Third blink
+  delay(1000);
+  digitalWrite(7, HIGH);
+  delay(1000);
+
+  digitalWrite(7, LOW);   // Extended off period
+  delay(5000);           // Wait 5 seconds
+
+  digitalWrite(7, HIGH);  // Extended on period
+  delay(5000);           // Wait 5 seconds
+}`}
+  </BlogCode>
+
+  <BlogCallout type="tip">
+    **Pattern Breakdown:**
+    
+    <OrderedList>
+      <OrderedListItem>
+        **Quick Blinks**
+        
+        Three consecutive 1-second on/off cycles
+      </OrderedListItem>
+      <OrderedListItem>
+        **Extended Off**
+        
+        LED stays off for 5 seconds
+      </OrderedListItem>
+      <OrderedListItem>
+        **Extended On**
+        
+        LED stays on for 5 seconds
+      </OrderedListItem>
+      <OrderedListItem>
+        **Pattern Repeat**
+        
+        The sequence repeats continuously
+      </OrderedListItem>
+    </OrderedList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Code Explanation
+
+  Let's break down the key parts of our code:
+
+  <OrderedList>
+    <OrderedListItem>
+      **Setup Configuration**
+      
+      <BlogInlineCode>pinMode(7, OUTPUT);</BlogInlineCode> configures pin 7 for LED control
+    </OrderedListItem>
+    <OrderedListItem>
+      **Triple Blink Pattern**
+      
+      Three sets of LOW/HIGH transitions with 1-second delays create quick blinks
+    </OrderedListItem>
+    <OrderedListItem>
+      **Extended States**
+      
+      5-second delays create longer on and off periods for contrast
+    </OrderedListItem>
+  </OrderedList>
+
+  <BlogCallout type="warning">
+    **Common Challenges:**
+    
+    <BlogList>
+      <BlogListItem>**Timing Accuracy** - Ensure delay values are in milliseconds</BlogListItem>
+      <BlogListItem>**Pattern Flow** - Keep track of your LED states throughout the sequence</BlogListItem>
+      <BlogListItem>**Code Structure** - Maintain clean, organized code for complex patterns</BlogListItem>
+      <BlogListItem>**Circuit Check** - Verify LED polarity and resistor placement</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Pattern Variations
+
+  Try these modifications to create your own patterns:
+
+  <BlogList>
+    <BlogListItem>**Adjust Timing** - Change the delay values to create different rhythms</BlogListItem>
+    <BlogListItem>**Multiple LEDs** - Add more LEDs and create alternating patterns</BlogListItem>
+    <BlogListItem>**Custom Sequences** - Design your own unique blinking sequences</BlogListItem>
+    <BlogListItem>**Morse Code** - Create patterns that spell out messages</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Looking Ahead:**
+    
+    In our next episode, we'll explore even more advanced Arduino programming concepts and projects!
+  </BlogCallout>
+</BlogSection> 

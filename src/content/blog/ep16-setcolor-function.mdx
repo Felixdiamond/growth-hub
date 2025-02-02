@@ -1,0 +1,305 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogKitSection from '@/components/blog/BlogKitSection';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep16-setcolor-function');
+
+<BlogHeader 
+  title={metadata.title}
+  description={metadata.description}
+  date={metadata.date}
+  author={metadata.author}
+  tags={metadata.tags}
+/>
+
+<BlogVideo 
+  videoId="WyUHq7kuJSY" 
+  title="How to program RGB LEDs with the setColor function"
+/>
+
+<BlogSection>
+  ## The Power of setColor
+
+  The <BlogInlineCode>setColor</BlogInlineCode> function is a game-changer for RGB LED programming, making your code cleaner, more maintainable, and easier to understand.
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep16img1.jpg",
+        alt: "RGB LED Color Wheel",
+        caption: "The RGB color wheel showing primary and secondary color combinations"
+      }
+    ]}
+  />
+
+  <BlogCallout type="tip">
+    **Think of setColor Like This:**
+    
+    Instead of individually adjusting red, green, and blue knobs on a mixing board, <BlogInlineCode>setColor</BlogInlineCode> lets you control all three channels with a single command - like having a master control for your RGB LED!
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Get Your Arduino Kit
+
+  To follow along with this RGB LED programming tutorial:
+
+  <BlogKitSection 
+    link="https://amzn.to/3Yv56Jg"
+    title="Get Your Arduino Kit"
+    description="The Elegoo Arduino kit includes RGB LEDs and components needed to create stunning color displays."
+    image="/images/kit.jpg"
+  />
+</BlogSection>
+
+<BlogSection>
+  ## Common Cathode Implementation
+
+  Here's how to implement the <BlogInlineCode>setColor</BlogInlineCode> function for a common cathode RGB LED:
+
+  <BlogCode filename="CommonCathodeSetColor.ino" language="cpp">
+{`int redPin = 3;
+int greenPin = 5;
+int bluePin = 6;
+
+void setColor(int red, int green, int blue) {
+    analogWrite(redPin, red);
+    analogWrite(greenPin, green);
+    analogWrite(bluePin, blue);
+}
+
+void setup() {
+    pinMode(redPin, OUTPUT);
+    pinMode(greenPin, OUTPUT);
+    pinMode(bluePin, OUTPUT);
+}
+
+void loop() {
+    setColor(255, 0, 0);   // Red
+    delay(1000);
+    setColor(0, 255, 0);   // Green
+    delay(1000);
+    setColor(0, 0, 255);   // Blue
+    delay(1000);
+    setColor(255, 255, 0); // Yellow
+    delay(1000);
+    setColor(0, 255, 255); // Cyan
+    delay(1000);
+    setColor(255, 0, 255); // Magenta
+    delay(1000);
+    setColor(255, 165, 0); // Orange
+    delay(1000);
+    setColor(128, 0, 128); // Purple
+    delay(1000);
+    setColor(255, 255, 255); // White
+    delay(1000);
+}`}
+  </BlogCode>
+
+  <BlogCallout type="note">
+    **Color Values Explained:**
+    
+    <BlogList>
+      <BlogListItem>**Primary Colors:** Red (255,0,0), Green (0,255,0), Blue (0,0,255)</BlogListItem>
+      <BlogListItem>**Secondary Colors:** Yellow (255,255,0), Cyan (0,255,255), Magenta (255,0,255)</BlogListItem>
+      <BlogListItem>**Custom Colors:** Orange (255,165,0), Purple (128,0,128)</BlogListItem>
+      <BlogListItem>**Special Values:** White (255,255,255), Black/Off (0,0,0)</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Common Anode Implementation
+
+  For common anode RGB LEDs, we need to invert the values:
+
+  <BlogCode filename="CommonAnodeSetColor.ino" language="cpp">
+{`int redPin = 3;
+int greenPin = 5;
+int bluePin = 6;
+
+void setColor(int redValue, int greenValue, int blueValue) {
+  // Invert values for common anode
+  analogWrite(redPin, 255 - redValue);
+  analogWrite(greenPin, 255 - greenValue);
+  analogWrite(bluePin, 255 - blueValue);
+}
+
+void setup() {
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+}
+
+void loop() {
+  // Colors work the same way, but values are inverted internally
+  setColor(255, 0, 0);   // Red
+  delay(1000);
+  setColor(0, 255, 0);   // Green
+  delay(1000);
+  setColor(0, 0, 255);   // Blue
+  delay(1000);
+}`}
+  </BlogCode>
+
+  <BlogCallout type="important">
+    **Value Inversion Explained:**
+    
+    <BlogList>
+      <BlogListItem>**Common Anode:** LED is connected to power (5V)</BlogListItem>
+      <BlogListItem>**Brightness Inverse:** Lower voltage = brighter LED</BlogListItem>
+      <BlogListItem>**Formula:** <BlogInlineCode>255 - value</BlogInlineCode> inverts the brightness</BlogListItem>
+      <BlogListItem>**Example:** 255 becomes 0, 0 becomes 255</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Advanced Color Mixing
+
+  Let's create some beautiful color transitions using our <BlogInlineCode>setColor</BlogInlineCode> function:
+
+  <BlogCode filename="ColorMixing.ino" language="cpp">
+{`// For Common Cathode RGB LED
+int redPin = 3;
+int greenPin = 5;
+int bluePin = 6;
+
+void setColor(int red, int green, int blue) {
+  analogWrite(redPin, red);
+  analogWrite(greenPin, green);
+  analogWrite(bluePin, blue);
+}
+
+// Function to create smooth transitions
+void colorFade(int startRed, int startGreen, int startBlue,
+               int endRed, int endGreen, int endBlue,
+               int steps, int duration) {
+  int redDiff = endRed - startRed;
+  int greenDiff = endGreen - startGreen;
+  int blueDiff = endBlue - startBlue;
+  
+  for(int i = 0; i <= steps; i++) {
+    int red = startRed + (redDiff * i / steps);
+    int green = startGreen + (greenDiff * i / steps);
+    int blue = startBlue + (blueDiff * i / steps);
+    
+    setColor(red, green, blue);
+    delay(duration / steps);
+  }
+}
+
+void loop() {
+  // Sunset colors
+  colorFade(255, 100, 0,    // Orange
+            255, 0, 100,     // Pink
+            50, 1000);       // 50 steps over 1 second
+            
+  // Ocean colors
+  colorFade(0, 100, 255,    // Light blue
+            0, 50, 100,      // Deep blue
+            50, 1000);
+            
+  // Forest colors
+  colorFade(50, 255, 0,     // Bright green
+            0, 100, 0,       // Dark green
+            50, 1000);
+}`}
+  </BlogCode>
+
+  <BlogCallout type="tip">
+    **Color Theory Tips:**
+    
+    <OrderedList>
+      <OrderedListItem>
+        **Complementary Colors**
+        <BlogList>
+          <BlogListItem>Red ↔ Cyan (0,255,255)</BlogListItem>
+          <BlogListItem>Green ↔ Magenta (255,0,255)</BlogListItem>
+          <BlogListItem>Blue ↔ Yellow (255,255,0)</BlogListItem>
+        </BlogList>
+      </OrderedListItem>
+
+      <OrderedListItem>
+        **Color Temperature**
+        <BlogList>
+          <BlogListItem>Warm: Higher red values</BlogListItem>
+          <BlogListItem>Cool: Higher blue values</BlogListItem>
+          <BlogListItem>Neutral: Balanced values</BlogListItem>
+        </BlogList>
+      </OrderedListItem>
+
+      <OrderedListItem>
+        **Intensity Control**
+        <BlogList>
+          <BlogListItem>Bright: Values closer to 255</BlogListItem>
+          <BlogListItem>Pastel: Mix with white (add all colors)</BlogListItem>
+          <BlogListItem>Muted: Lower overall values</BlogListItem>
+        </BlogList>
+      </OrderedListItem>
+    </OrderedList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Creating Color Presets
+
+  Here's a useful way to organize your favorite colors:
+
+  <BlogCode filename="ColorPresets.ino" language="cpp">
+{`// Color structure for organizing RGB values
+struct Color {
+  int red;
+  int green;
+  int blue;
+  const char* name;
+};
+
+// Preset color definitions
+const Color colors[] = {
+  {255, 0, 0, "Red"},
+  {0, 255, 0, "Green"},
+  {0, 0, 255, "Blue"},
+  {255, 255, 0, "Yellow"},
+  {0, 255, 255, "Cyan"},
+  {255, 0, 255, "Magenta"},
+  {255, 165, 0, "Orange"},
+  {128, 0, 128, "Purple"},
+  {255, 192, 203, "Pink"},
+  {0, 128, 0, "Dark Green"}
+};
+
+void setColorByName(const char* colorName) {
+  for(int i = 0; i < sizeof(colors)/sizeof(colors[0]); i++) {
+    if(strcmp(colors[i].name, colorName) == 0) {
+      setColor(colors[i].red, colors[i].green, colors[i].blue);
+      return;
+    }
+  }
+}
+
+void loop() {
+  // Use colors by name
+  setColorByName("Red");
+  delay(1000);
+  setColorByName("Cyan");
+  delay(1000);
+  setColorByName("Pink");
+  delay(1000);
+}`}
+  </BlogCode>
+
+  <BlogCallout type="note">
+    **Coming Up Next:**
+    
+    In future episodes, we'll explore even more advanced topics like creating custom light patterns, responsive color changes, and integrating RGB LEDs with other sensors and components!
+  </BlogCallout>
+</BlogSection> 

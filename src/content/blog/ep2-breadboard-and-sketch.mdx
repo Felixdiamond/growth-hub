@@ -1,0 +1,190 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep2-breadboard-and-sketch');
+
+<BlogHeader 
+  title="Everything you need to know about the Breadboard and Sketch"
+  description="Learn how to use a breadboard for electronics prototyping and write your first Arduino sketch."
+  date="October 31, 2024"
+  author="Shaun"
+  tags={["Arduino", "Electronics", "Programming"]}
+/>
+
+<BlogVideo 
+  videoId="JyNS_LR_PFw" 
+  title="Understanding Breadboards and Arduino Sketches"
+/>
+
+<BlogSection>
+  ## What is a Breadboard?
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep2img1.jpg",
+        alt: "Breadboard Overview",
+        caption: "A typical breadboard with its key components labeled"
+      }
+    ]}
+  />
+
+  A breadboard is a tool that helps you build electronic circuits without having to use any tools like soldering irons. Think of it as a LEGO base for electronics you can plug different parts into.
+
+  <BlogCallout type="tip">
+    **Perfect for Prototyping!**
+    
+    Breadboards are ideal for testing circuits and experimenting with different components before creating a permanent solution.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Key Parts of a Breadboard
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep2img2.png",
+        alt: "Power Rails",
+        caption: "Power rails provide easy access to power and ground connections"
+      },
+      {
+        src: "/images/blog/ep2img3.png",
+        alt: "Terminal Strips",
+        caption: "Terminal strips for connecting components"
+      }
+    ]}
+  />
+
+  <OrderedList>
+    <OrderedListItem>
+      **Power Rails**
+      
+      The lines running along the sides, marked with red (+) and blue (-) lines. These are used to distribute power throughout your circuit.
+    </OrderedListItem>
+    <OrderedListItem>
+      **Terminal Strips**
+      
+      The middle section where components connect. Each row is internally connected, allowing components to interact.
+    </OrderedListItem>
+  </OrderedList>
+
+  <BlogCallout type="note">
+    The holes in each row of the terminal strips are connected horizontally, while the power rails are connected vertically.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## How to Use a Breadboard
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep2img4.png",
+        alt: "Component Placement",
+        caption: "Proper component placement on a breadboard"
+      },
+      {
+        src: "/images/blog/ep2img5.png",
+        alt: "Circuit Example",
+        caption: "Example of a complete circuit on a breadboard"
+      }
+    ]}
+  />
+
+  <OrderedList>
+    <OrderedListItem>
+      **Insert Components**
+      
+      Place electronic parts like LEDs, resistors, and buttons into the terminal strip holes.
+    </OrderedListItem>
+    <OrderedListItem>
+      **Connect with Jumper Wires**
+      
+      Use jumper wires to create connections between components and power rails.
+    </OrderedListItem>
+    <OrderedListItem>
+      **Power It Up**
+      
+      Connect the power rails to your Arduino or other power source.
+    </OrderedListItem>
+  </OrderedList>
+
+  <BlogCallout type="warning">
+    Always double-check your connections before applying power! Incorrect wiring can damage components.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## The Arduino Sketch
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep2img6.jpg",
+        alt: "Arduino IDE",
+        caption: "The Arduino IDE where sketches are written and uploaded"
+      }
+    ]}
+  />
+
+  In Arduino, a sketch is your program - a set of instructions that control your board. It's written in the Arduino programming language, based on C/C++.
+
+  <BlogCallout type="important">
+    **Key Concepts**
+    
+    Every Arduino sketch must have at least two functions: <BlogInlineCode>setup()</BlogInlineCode> and <BlogInlineCode>loop()</BlogInlineCode>.
+  </BlogCallout>
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep2img7.png",
+        alt: "Sketch Structure",
+        caption: "Basic structure of an Arduino sketch"
+      }
+    ]}
+  />
+
+  <BlogSection>
+    ### Essential Functions
+    <BlogList>
+      <BlogListItem>**Setup Function** - Runs once when the Arduino starts, perfect for initialization</BlogListItem>
+      <BlogListItem>**Loop Function** - Runs continuously, containing your main program logic</BlogListItem>
+    </BlogList>
+  </BlogSection>
+
+  Here's a simple example sketch:
+
+  <BlogCode filename="BasicSketch.ino" language="cpp">
+{`// Define pin numbers
+const int LED_PIN = 13;
+
+void setup() {
+  // Initialize the LED pin as output
+  pinMode(LED_PIN, OUTPUT);
+}
+
+void loop() {
+  // Turn LED on
+  digitalWrite(LED_PIN, HIGH);
+  delay(1000);  // Wait for 1 second
+  
+  // Turn LED off
+  digitalWrite(LED_PIN, LOW);
+  delay(1000);  // Wait for 1 second
+}`}
+  </BlogCode>
+
+  <BlogCallout type="tip">
+    **Best Practice:** Always add comments to your code to explain what each part does. This makes it easier to understand and modify later!
+  </BlogCallout>
+</BlogSection> 

@@ -1,0 +1,220 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogKitSection from '@/components/blog/BlogKitSection';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep6-serial-monitor-guide');
+
+<BlogHeader 
+  title={metadata.title}
+  description={metadata.description}
+  date={metadata.date}
+  author={metadata.author}
+  tags={metadata.tags}
+/>
+
+<BlogVideo 
+  videoId="omzakdj26VM" 
+  title="How to Use the Serial Monitor"
+/>
+
+<BlogSection>
+  ## What is the Serial Monitor?
+
+  The Serial Monitor is your direct communication line with the Arduino. Think of it as a chat window where you can see what your Arduino is thinking and even send it commands!
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep6img1.jpg",
+        alt: "Arduino Serial Monitor Interface",
+        caption: "The Arduino IDE Serial Monitor interface showing data communication"
+      }
+    ]}
+  />
+
+  <BlogCallout type="tip">
+    **Communication Tool:**
+    
+    The Serial Monitor is essential for debugging, monitoring sensor values, and understanding how your code behaves in real-time.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Get Your Arduino Kit
+
+  To follow along with our tutorials, you can get your Arduino kit from either of these sources:
+
+  <BlogKitSection 
+    link="https://amzn.to/3Yv56Jg"
+    title="Get Your Arduino Kit (Amazon)"
+    description="The Elegoo Arduino kit with all components needed for our tutorials."
+    image="/images/kit.jpg"
+  />
+
+  <BlogCallout type="note">
+    **Alternative Source:**
+    You can also get the same kit I use from Temu: [Arduino Kit on Temu](https://temu.to/k/u77r95d7o9p)
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Understanding Baud Rate
+
+  <BlogCallout type="important">
+    **What is Baud Rate?**
+    
+    Baud rate is the speed at which data travels between your computer and Arduino, measured in bits per second.
+  </BlogCallout>
+
+  <BlogList>
+    <BlogListItem>**Speed Limit** - Baud rate sets how fast data can travel between your computer and Arduino</BlogListItem>
+    <BlogListItem>**Common Rate** - 9600 baud is standard, meaning 9600 bits per second</BlogListItem>
+    <BlogListItem>**Matching Important** - Both sender and receiver must use the same baud rate</BlogListItem>
+    <BlogListItem>**Setup Required** - Must be configured in your code using <BlogInlineCode>Serial.begin(9600);</BlogInlineCode></BlogListItem>
+  </BlogList>
+</BlogSection>
+
+<BlogSection accent>
+  ## Line Endings Explained
+
+  When sending data through the Serial Monitor, you can choose different line ending options:
+
+  <OrderedList>
+    <OrderedListItem>
+      **No Line Ending**
+      
+      No extra characters added - perfect for simple data transmission
+    </OrderedListItem>
+    <OrderedListItem>
+      **Newline (NL)**
+      
+      Adds <BlogInlineCode>\n</BlogInlineCode> - common in Unix-based systems
+    </OrderedListItem>
+    <OrderedListItem>
+      **Carriage Return (CR)**
+      
+      Adds <BlogInlineCode>\r</BlogInlineCode> - used in classic Mac OS
+    </OrderedListItem>
+    <OrderedListItem>
+      **Both CR & LF**
+      
+      Adds <BlogInlineCode>\r\n</BlogInlineCode> - standard in Windows systems
+    </OrderedListItem>
+  </OrderedList>
+
+  <BlogCallout type="tip">
+    **Recommendation:**
+    
+    For most projects, using "No Line Ending" is the simplest and most reliable option.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Serial Monitor Code Example
+
+  Here's a simple example of using the Serial Monitor:
+
+  <BlogCode filename="SerialExample.ino" language="cpp">
+{`void setup() {
+  // Initialize serial communication at 9600 baud
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Print a number to the Serial Monitor
+  Serial.println(5);
+  
+  // Alternative: print without moving to next line
+  // Serial.print(5);
+}`}
+  </BlogCode>
+
+  <BlogCallout type="note">
+    **Code Breakdown:**
+    
+    <BlogList>
+      <BlogListItem>**Serial.begin(9600)** - Starts serial communication at 9600 baud rate</BlogListItem>
+      <BlogListItem>**Serial.println()** - Prints data and moves to a new line</BlogListItem>
+      <BlogListItem>**Serial.print()** - Prints data without moving to a new line</BlogListItem>
+      <BlogListItem>**Quotation Marks** - Required when printing text (e.g., <BlogInlineCode>Serial.println("Hello");</BlogInlineCode>)</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Advanced Usage Tips
+
+  Make the most of the Serial Monitor with these techniques:
+
+  <BlogList>
+    <BlogListItem>**Print Variables** - Monitor changing values in real-time</BlogListItem>
+    <BlogListItem>**Debug Messages** - Add status messages to track program flow</BlogListItem>
+    <BlogListItem>**Mathematical Operations** - Print results of calculations directly</BlogListItem>
+    <BlogListItem>**Formatted Output** - Combine text and numbers for clear information</BlogListItem>
+  </BlogList>
+
+  <BlogCode filename="AdvancedSerial.ino" language="cpp">
+{`void setup() {
+  Serial.begin(9600);
+  Serial.println("Arduino is ready!");
+}
+
+void loop() {
+  // Print a calculation
+  int result = 5 + 3;
+  Serial.print("5 + 3 = ");
+  Serial.println(result);
+  
+  // Print formatted text
+  Serial.println("Temperature: 25°C");
+  
+  delay(1000);  // Wait 1 second
+}`}
+  </BlogCode>
+</BlogSection>
+
+<BlogSection>
+  ## Common Challenges
+
+  Watch out for these common issues when using the Serial Monitor:
+
+  <BlogList>
+    <BlogListItem>**Wrong Baud Rate** - Make sure it matches your <BlogInlineCode>Serial.begin()</BlogInlineCode> setting</BlogListItem>
+    <BlogListItem>**Buffer Overflow** - Don't send too much data too quickly</BlogListItem>
+    <BlogListItem>**Missing Serial.begin()** - Always initialize in <BlogInlineCode>setup()</BlogInlineCode></BlogListItem>
+    <BlogListItem>**Line Ending Issues** - Choose the appropriate option for your needs</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="warning">
+    **Important Reminder:**
+    
+    Always close and reopen the Serial Monitor after uploading new code to ensure proper communication.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Looking Ahead
+
+  The Serial Monitor is a powerful tool for:
+
+  <BlogList>
+    <BlogListItem>**Debugging** - Track down issues in your code</BlogListItem>
+    <BlogListItem>**Data Monitoring** - Watch sensor values in real-time</BlogListItem>
+    <BlogListItem>**User Interface** - Create simple text-based interfaces</BlogListItem>
+    <BlogListItem>**Learning Tool** - Understand how your code executes</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Coming Up Next:**
+    
+    In our next episode, we'll explore more advanced Arduino programming concepts and put your Serial Monitor skills to use!
+  </BlogCallout>
+</BlogSection> 

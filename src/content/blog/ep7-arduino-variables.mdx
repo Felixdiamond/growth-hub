@@ -1,0 +1,232 @@
+import { blogPosts } from '@/data/blog-posts';
+import BlogHeader from '@/components/blog/BlogHeader';
+import BlogVideo from '@/components/blog/BlogVideo';
+import { BlogImage } from '@/components/blog/BlogImage';
+import BlogKitSection from '@/components/blog/BlogKitSection';
+import BlogList, { BlogListItem } from '@/components/blog/BlogBulletList';
+import OrderedList, { OrderedListItem } from '@/components/blog/OrderedList';
+import BlogSection from '@/components/blog/BlogSection';
+import BlogCallout from '@/components/blog/BlogCallout';
+import BlogCode from '@/components/blog/BlogCode';
+import BlogInlineCode from '@/components/blog/BlogInlineCode';
+
+export const metadata = blogPosts.find(post => post.slug === 'ep7-arduino-variables');
+
+<BlogHeader 
+  title={metadata.title}
+  description={metadata.description}
+  date={metadata.date}
+  author={metadata.author}
+  tags={metadata.tags}
+/>
+
+<BlogVideo 
+  videoId="EaRdqdBxF9Y" 
+  title="Learning to Use Variables in your Arduino Program"
+/>
+
+<BlogSection>
+  ## Understanding Variables
+
+  Variables are like containers that store information in your program. They make your code more efficient and easier to manage by allowing you to store and reuse different types of data.
+
+  <BlogImage 
+    images={[
+      {
+        src: "/images/blog/ep7img1.jpg",
+        alt: "Arduino Variables Concept",
+        caption: "Understanding different types of variables in Arduino programming"
+      }
+    ]}
+  />
+
+  <BlogCallout type="tip">
+    **Think of Variables As:**
+    
+    Imagine variables as labeled boxes where you can store different types of information - numbers, text, or decimal values - and easily access them later in your program.
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Get Your Arduino Kit
+
+  To follow along with our tutorials, you'll need an Arduino kit:
+
+  <BlogKitSection 
+    link="https://amzn.to/3Yv56Jg"
+    title="Get Your Arduino Kit"
+    description="The Elegoo Arduino kit includes everything you need to learn Arduino programming and experiment with variables."
+    image="/images/kit.jpg"
+  />
+</BlogSection>
+
+<BlogSection>
+  ## Integer Variables (int)
+
+  Integers are whole numbers without decimal points. They're perfect for counting, storing pin numbers, or managing simple numerical values.
+
+  <BlogCode filename="IntegerExample.ino" language="cpp">
+{`int num = 3;
+
+void setup() {
+  // Initialize serial communication
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Print the value of our integer variable
+  Serial.println(num);
+}`}
+  </BlogCode>
+
+  <BlogCallout type="note">
+    **About Integers:**
+    
+    <BlogList>
+      <BlogListItem>**Declaration** - Use the <BlogInlineCode>int</BlogInlineCode> keyword</BlogListItem>
+      <BlogListItem>**Values** - Whole numbers (no decimals)</BlogListItem>
+      <BlogListItem>**Common Uses** - Counting, pin numbers, simple math</BlogListItem>
+      <BlogListItem>**Memory** - Takes up 2 bytes of memory</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## String Variables (String)
+
+  Strings store text data, making them perfect for messages, labels, and any text-based information.
+
+  <BlogCode filename="StringExample.ino" language="cpp">
+{`String message = "Hello World";
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Print our string message
+  Serial.println(message);
+}`}
+  </BlogCode>
+
+  <BlogCallout type="important">
+    **String Basics:**
+    
+    <BlogList>
+      <BlogListItem>**Declaration** - Use the <BlogInlineCode>String</BlogInlineCode> keyword</BlogListItem>
+      <BlogListItem>**Values** - Text enclosed in double quotes</BlogListItem>
+      <BlogListItem>**Common Uses** - Messages, labels, text data</BlogListItem>
+      <BlogListItem>**Memory** - Variable size based on content</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Float Variables (float)
+
+  Floats store decimal numbers, making them ideal for precise measurements and calculations.
+
+  <BlogCode filename="FloatExample.ino" language="cpp">
+{`float pi = 3.14159;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Print our decimal number
+  Serial.println(pi);
+}`}
+  </BlogCode>
+
+  <BlogCallout type="note">
+    **Float Features:**
+    
+    <BlogList>
+      <BlogListItem>**Declaration** - Use the <BlogInlineCode>float</BlogInlineCode> keyword</BlogListItem>
+      <BlogListItem>**Values** - Numbers with decimal points</BlogListItem>
+      <BlogListItem>**Common Uses** - Sensor readings, calculations</BlogListItem>
+      <BlogListItem>**Memory** - Takes up 4 bytes of memory</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Best Practices
+
+  Follow these guidelines for effective variable use:
+
+  <BlogList>
+    <BlogListItem>**Descriptive Names** - Use clear, meaningful variable names</BlogListItem>
+    <BlogListItem>**Initialization** - Always give variables initial values</BlogListItem>
+    <BlogListItem>**Scope** - Declare variables where they're needed</BlogListItem>
+    <BlogListItem>**Data Types** - Choose the appropriate type for your data</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="warning">
+    **Common Mistakes to Avoid:**
+    
+    <BlogList>
+      <BlogListItem>**Wrong Data Type** - Using int for decimal values</BlogListItem>
+      <BlogListItem>**Naming Conflicts** - Using reserved words as variable names</BlogListItem>
+      <BlogListItem>**Uninitialized Variables** - Not giving variables starting values</BlogListItem>
+      <BlogListItem>**Case Sensitivity** - Arduino is case-sensitive, so <BlogInlineCode>myVar</BlogInlineCode> and <BlogInlineCode>myvar</BlogInlineCode> are different</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection>
+  ## Practical Examples
+
+  Here's how to combine different variable types in a practical example:
+
+  <BlogCode filename="CombinedExample.ino" language="cpp">
+{`int sensorPin = 7;
+float temperature = 25.5;
+String unit = "Celsius";
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Print formatted sensor reading
+  Serial.print("Sensor on pin ");
+  Serial.print(sensorPin);
+  Serial.print(": ");
+  Serial.print(temperature);
+  Serial.print(" ");
+  Serial.println(unit);
+}`}
+  </BlogCode>
+
+  <BlogCallout type="tip">
+    **Pro Tips:**
+    
+    <BlogList>
+      <BlogListItem>**Combine Types** - Mix variables for better formatted output</BlogListItem>
+      <BlogListItem>**Serial.print vs println** - Use print for continuous lines</BlogListItem>
+      <BlogListItem>**Comments** - Document your variable usage</BlogListItem>
+      <BlogListItem>**Organization** - Group related variables together</BlogListItem>
+    </BlogList>
+  </BlogCallout>
+</BlogSection>
+
+<BlogSection accent>
+  ## Looking Ahead
+
+  Now that you understand variables, you can:
+
+  <BlogList>
+    <BlogListItem>**Create Dynamic Programs** - Store and update values as needed</BlogListItem>
+    <BlogListItem>**Handle Sensor Data** - Store and process readings efficiently</BlogListItem>
+    <BlogListItem>**Build User Interfaces** - Create interactive messages and displays</BlogListItem>
+    <BlogListItem>**Optimize Code** - Write more efficient and maintainable programs</BlogListItem>
+  </BlogList>
+
+  <BlogCallout type="note">
+    **Coming Up Next:**
+    
+    In our next episode, we'll explore more advanced programming concepts and put your variable skills to use in exciting projects!
+  </BlogCallout>
+</BlogSection> 
