@@ -92,6 +92,7 @@ export default function BlogGrid({ posts = [], className }: BlogGridProps) {
               </p>
               <div className="mt-4 flex items-center justify-between text-sm text-dark-300">
                 <span>{post.author}</span>
+                <span>•</span>
                 <time dateTime={new Date(post.date).toISOString()}>
                   {new Date(post.date).toLocaleDateString('en-US', {
                     year: 'numeric',

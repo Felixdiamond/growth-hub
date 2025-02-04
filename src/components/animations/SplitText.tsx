@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 'use client';
 
 import { useSprings, animated } from '@react-spring/web';

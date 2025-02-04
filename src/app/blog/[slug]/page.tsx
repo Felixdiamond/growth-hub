@@ -3,6 +3,8 @@ import { readdirSync } from 'fs';
 import { join } from 'path';
 import { notFound } from 'next/navigation';
 
+type Params = Promise<{ slug: string }>;
+
 function getBlogSlugs() {
   const postsDirectory = join(process.cwd(), 'src/content/blog');
   return readdirSync(postsDirectory)
@@ -10,9 +12,10 @@ function getBlogSlugs() {
     .map(fileName => fileName.replace(/\.mdx$/, ''));
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
+export default async function Page({ params }: { params: Params }) {
   try {
-    const { default: Content } = await import(`../../../content/blog/${params.slug}.mdx`);
+    const { slug } = await params;
+    const { default: Content } = await import(`../../../content/blog/${slug}.mdx`);
     return <Content />;
   } catch (error) {
     console.error('Failed to load blog post:', error);
@@ -28,11 +31,12 @@ export function generateStaticParams() {
 export async function generateMetadata({ 
   params 
 }: { 
-  params: { slug: string } 
+  params: Params 
 }): Promise<Metadata> {
+  const { slug } = await params;
   return {
-    title: `Blog Post: ${params.slug}`,
-    description: `Details about blog post ${params.slug}`
+    title: `Blog Post: ${slug}`,
+    description: `Details about blog post ${slug}`
   };
 }
 

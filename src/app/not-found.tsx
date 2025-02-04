@@ -1,10 +1,29 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
 export default function NotFound() {
+  const [dimensions, setDimensions] = useState({ width: 1000, height: 800 });
+
+  useEffect(() => {
+    setDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight
+    });
+
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="min-h-screen bg-dark-900 flex items-center justify-center px-6 relative overflow-hidden">
       {/* Background Pattern */}
@@ -85,22 +104,37 @@ export default function NotFound() {
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-accent-500 text-dark-900 rounded-xl font-semibold text-lg hover:bg-accent-400 transition-colors shadow-lg shadow-accent-500/20 border border-accent-400/20"
+                className="group relative px-8 py-4 bg-accent-500/10 hover:bg-accent-500/20 text-accent-300 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg shadow-accent-500/5 border border-accent-400/20 hover:border-accent-400/30"
               >
-                Back to Home
+                <span className="relative z-10 flex items-center gap-2">
+                  Back to Home
+                  <svg 
+                    className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M13 7l5 5m0 0l-5 5m5-5H6" 
+                    />
+                  </svg>
+                </span>
               </motion.div>
             </Link>
           </motion.div>
 
           {/* Floating particles */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <AnimatePresence>
             {[...Array(20)].map((_, i) => (
               <motion.div
                 key={i}
                 className="absolute w-1 h-1 bg-accent-400/30 rounded-full"
                 initial={{
-                  x: Math.random() * window.innerWidth,
-                  y: Math.random() * window.innerHeight,
+                  x: Math.random() * dimensions.width,
+                  y: Math.random() * dimensions.height,
                   scale: Math.random() * 0.5 + 0.5,
                 }}
                 animate={{
@@ -114,7 +148,7 @@ export default function NotFound() {
                 }}
               />
             ))}
-          </div>
+          </AnimatePresence>
         </motion.div>
       </div>
     </div>

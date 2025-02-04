@@ -37,7 +37,7 @@ const Features = () => {
       ),
       path: "/blog/led-dimming-pwm-ep9",
       topics: ["PWM", "Sensors", "Automation"],
-      variant: "yellow"
+      variant: "blue"
     },
     {
       title: "Advanced Topics",
@@ -52,7 +52,7 @@ const Features = () => {
       ),
       path: "/blog/rgb-setcolor-function-ep16",
       topics: ["IoT", "RGB Control", "Functions"],
-      variant: "pink"
+      variant: "blue"
     },
   ];
 

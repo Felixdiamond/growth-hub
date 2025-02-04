@@ -25,10 +25,10 @@ export default function BlogCard({ post, className }: BlogCardProps) {
           className
         )}
       >
-        {post.coverImage && (
+        {post.image && (
           <div className="relative aspect-[16/9] w-full overflow-hidden">
             <Image
-              src={post.coverImage}
+              src={post.image}
               alt={post.title}
               fill
               className="object-cover transition-all duration-700 will-change-transform group-hover:scale-105"
@@ -61,14 +61,14 @@ export default function BlogCard({ post, className }: BlogCardProps) {
           <div className="mt-8 flex items-center justify-between pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80">
             <div className="flex items-center gap-3">
               <div className="relative flex h-10 w-10 shrink-0 select-none items-center justify-center overflow-hidden rounded-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500 to-indigo-500 dark:from-violet-400 dark:to-indigo-400" />
-                <span className="relative text-sm font-medium text-white">
-                  {post.author.name.charAt(0)}
+                <div className="absolute inset-0 bg-gradient-to-br from-accent-400 to-accent-500 opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300" />
+                <span className="relative text-[15px] font-medium text-white">
+                  {post.author.charAt(0)}
                 </span>
               </div>
-              <div>
-                <div className="text-[14px] font-semibold tracking-wide text-zinc-900 dark:text-zinc-100">
-                  {post.author.name}
+              <div className="flex flex-col gap-0.5">
+                <div className="text-[15px] font-semibold tracking-wide text-white/90 group-hover:text-white transition-colors">
+                  {post.author}
                 </div>
                 <div className="text-[13px] tracking-wide text-zinc-500 dark:text-zinc-400">
                   {new Date(post.date).toLocaleDateString('en-US', {

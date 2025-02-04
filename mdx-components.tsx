@@ -7,7 +7,7 @@ const BlogArticle = dynamic(() => import('@/components/blog/BlogArticle'), { ssr
 const BlogHeading = dynamic(() => import('@/components/blog/BlogHeading'), { ssr: true })
 const BlogParagraph = dynamic(() => import('@/components/blog/BlogParagraph'), { ssr: true })
 const BlogCode = dynamic(() => import('@/components/blog/BlogCode'), { ssr: true })
-const BlogList = dynamic(() => import('@/components/blog/BlogList'), { ssr: true })
+const BlogList = dynamic(() => import('@/components/blog/BlogBulletList'), { ssr: true })
 const BlogListItem = dynamic(() => import('@/components/blog/BlogListItem'), { ssr: true })
 const BlogLink = dynamic(() => import('@/components/blog/BlogLink'), { ssr: true })
 const BlogMedia = dynamic(() => import('@/components/blog/BlogMedia'), { ssr: true })
@@ -48,10 +48,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ),
     // Code blocks
     pre: ({ children }) => (
-      <BlogCode variant="block">{children}</BlogCode>
+      <BlogCode>{children}</BlogCode>
     ),
     code: ({ children }) => (
-      <BlogCode variant="inline">{children}</BlogCode>
+      <BlogCode>{children}</BlogCode>
     ),
     // Lists
     ul: ({ children }) => (
