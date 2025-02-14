@@ -1,0 +1,21 @@
+{
+  "name": "growth-hub-notification-service",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "cron": "^3.1.6",
+    "dotenv": "^16.4.5",
+    "fast-xml-parser": "^4.3.5",
+    "mongodb": "^6.3.0",
+    "node-fetch": "^3.3.2",
+    "resend": "^3.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "type": "module"
+} 

@@ -1,6 +1,0 @@
-{
-  "crons": [{
-    "path": "/api/cron/check-videos",
-    "schedule": "0 12 * * *"
-  }]
-} 
