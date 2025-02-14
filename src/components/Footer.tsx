@@ -1,9 +1,13 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
+import { useRef } from 'react';
 
 const Footer = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+
   const quickLinks = [
     { label: 'Home', href: '/' },
     { label: 'About', href: '#about' },
@@ -41,105 +45,172 @@ const Footer = () => {
     },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+
   return (
-    <footer className="relative bg-dark-900 pt-24 pb-12 overflow-hidden">
+    <footer className="relative bg-dark-900 pt-16 sm:pt-24 pb-8 sm:pb-12 overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-dark-800 via-dark-900 to-dark-900" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-accent-500/5 via-transparent to-transparent opacity-30" />
+        <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent,rgba(14,165,233,0.03),transparent)] animate-pulse" />
       </div>
 
-      <div className="container mx-auto px-4 relative">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+      <div ref={containerRef} className="container mx-auto px-4 relative">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-12 sm:mb-16"
+        >
           {/* Brand */}
-          <div className="space-y-4">
-            <Link href="/" className="inline-block">
+          <motion.div variants={itemVariants} className="space-y-3 sm:space-y-4">
+            <Link href="/" className="inline-block group">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="text-2xl font-bold text-white"
+                className="relative"
               >
-                Growth Hub
+                <span className="text-xl sm:text-2xl font-bold text-white group-hover:text-transparent bg-clip-text bg-gradient-to-r from-accent-300 via-accent-400 to-accent-300 transition-all duration-300">
+                  Growth Hub
+                </span>
+                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-accent-300 via-accent-400 to-accent-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
               </motion.div>
             </Link>
-            <p className="text-dark-100">
-              Empowering creators with the knowledge and skills to build their dream machines.
+            <p className="text-sm sm:text-base text-dark-100">
+              Empowering creators with the knowledge and skill to build their dream machines.
             </p>
-          </div>
+          </motion.div>
 
           {/* Quick Links */}
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Quick Links</h3>
-            <ul className="space-y-2">
+          <motion.div variants={itemVariants}>
+            <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Quick Links</h3>
+            <ul className="space-y-1.5 sm:space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-dark-100 hover:text-accent-300 transition-colors"
+                    className="text-sm sm:text-base text-dark-100 hover:text-accent-300 transition-colors relative group"
                   >
-                    {link.label}
+                    <span className="relative">
+                      {link.label}
+                      <span className="absolute inset-x-0 bottom-0 h-px bg-accent-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+                    </span>
                   </Link>
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Connect */}
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Connect</h3>
-            <ul className="space-y-2">
+          <motion.div variants={itemVariants}>
+            <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Connect</h3>
+            <ul className="space-y-1.5 sm:space-y-2">
               {socialLinks.map((link) => (
                 <li key={link.label}>
                   <a
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-dark-100 hover:text-accent-300 transition-colors"
+                    className="flex items-center gap-2 text-sm sm:text-base text-dark-100 hover:text-accent-300 transition-all duration-300 group"
                   >
-                    {link.icon}
-                    <span>{link.label}</span>
+                    <span className="transform group-hover:scale-110 transition-transform duration-300">
+                      {link.icon}
+                    </span>
+                    <span className="relative">
+                      {link.label}
+                      <span className="absolute inset-x-0 bottom-0 h-px bg-accent-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+                    </span>
                   </a>
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Newsletter Teaser */}
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Stay Updated</h3>
-            <p className="text-dark-100 mb-4">
+          <motion.div variants={itemVariants}>
+            <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Stay Updated</h3>
+            <p className="text-sm sm:text-base text-dark-100 mb-3 sm:mb-4">
               Subscribe to our newsletter for weekly Arduino tutorials and electronics tips.
             </p>
             <motion.a
               href="#newsletter"
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(14,165,233,0.2)" }}
               whileTap={{ scale: 0.95 }}
-              className="inline-block px-6 py-2 rounded-lg bg-accent-500 text-white font-medium hover:bg-accent-400 transition-colors"
+              className="inline-block px-5 sm:px-6 py-2 rounded-lg bg-accent-500 text-sm sm:text-base text-white font-medium transition-all duration-300 shadow-lg shadow-accent-500/25 relative overflow-hidden group"
             >
-              Subscribe Now
+              <span className="relative z-10">Subscribe Now</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-accent-400 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </motion.a>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-dark-700 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-dark-200 text-sm">
-              © 2024 The Growth Hub. All rights reserved.
-            </p>
-            <div className="flex items-center gap-6">
-              <Link href="/privacy" className="text-dark-200 hover:text-accent-300 text-sm transition-colors">
-                Privacy Policy
+        <motion.div
+          variants={itemVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="border-t border-dark-700 pt-6 sm:pt-8"
+        >
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-xs sm:text-sm text-dark-200">
+              <p>© 2025 The Growth Hub. All rights reserved.</p>
+              <div className="flex items-center gap-1.5">
+                <span>Developed with</span>
+                <svg className="w-4 h-4 text-accent-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                <span>by</span>
+                <a 
+                  href="https://portfolio-ayane.vercel.app" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-accent-300 hover:text-accent-400 transition-colors"
+                >
+                  Felix (Ayane)
+                </a>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 sm:gap-6">
+              <Link href="/privacy" className="text-xs sm:text-sm text-dark-200 hover:text-accent-300 transition-colors relative group">
+                <span className="relative">
+                  Privacy Policy
+                  <span className="absolute inset-x-0 bottom-0 h-px bg-accent-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+                </span>
               </Link>
-              <Link href="/terms" className="text-dark-200 hover:text-accent-300 text-sm transition-colors">
-                Terms of Service
+              <Link href="/terms" className="text-xs sm:text-sm text-dark-200 hover:text-accent-300 transition-colors relative group">
+                <span className="relative">
+                  Terms of Service
+                  <span className="absolute inset-x-0 bottom-0 h-px bg-accent-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+                </span>
               </Link>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );
 };
 
-export default Footer; 
+export default Footer;

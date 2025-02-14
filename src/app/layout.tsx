@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import CustomCursor from "@/components/CustomCursor";
-import CustomScrollbar from "@/components/CustomScrollbar";
-import SmoothScroll from "@/components/SmoothScroll";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import ClientLayout from "@/components/ClientLayout";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,18 +28,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body
-        className={`${inter.variable} font-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300`}
-      >
-        <ThemeProvider>
-          <CustomCursor />
-          <CustomScrollbar />
-          <SmoothScroll>
-            <main className="flex min-h-screen flex-col">
-              {children}
-            </main>
-          </SmoothScroll>
-        </ThemeProvider>
+      <body className={`${inter.variable} font-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300`}>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

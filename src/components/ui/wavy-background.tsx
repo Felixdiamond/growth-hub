@@ -32,9 +32,10 @@ export const WavyBackground = ({
     nt: number,
     i: number,
     x: number,
-    ctx: any,
-    canvas: any;
+    ctx: any;
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const getSpeed = () => {
     switch (speed) {
       case "slow":
@@ -47,17 +48,37 @@ export const WavyBackground = ({
   };
 
   const init = () => {
-    canvas = canvasRef.current;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
     ctx = canvas.getContext("2d");
-    w = ctx.canvas.width = window.innerWidth;
-    h = ctx.canvas.height = window.innerHeight;
-    ctx.filter = `blur(${blur}px)`;
-    nt = 0;
-    window.onresize = function () {
+    
+    // Use the container's dimensions if available, otherwise fallback to window dimensions
+    const container = containerRef.current;
+    if (container) {
+      const { width, height } = container.getBoundingClientRect();
+      w = ctx.canvas.width = width;
+      h = ctx.canvas.height = height;
+    } else {
       w = ctx.canvas.width = window.innerWidth;
       h = ctx.canvas.height = window.innerHeight;
+    }
+    
+    ctx.filter = `blur(${blur}px)`;
+    nt = 0;
+    
+    const handleResize = () => {
+      if (container) {
+        const { width, height } = container.getBoundingClientRect();
+        w = ctx.canvas.width = width;
+        h = ctx.canvas.height = height;
+      } else {
+        w = ctx.canvas.width = window.innerWidth;
+        h = ctx.canvas.height = window.innerHeight;
+      }
       ctx.filter = `blur(${blur}px)`;
     };
+    window.addEventListener("resize", handleResize);
+    
     render();
   };
 
@@ -68,6 +89,7 @@ export const WavyBackground = ({
     "#e879f9",
     "#22d3ee",
   ];
+  
   const drawWave = (n: number) => {
     nt += getSpeed();
     for (i = 0; i < n; i++) {
@@ -75,7 +97,7 @@ export const WavyBackground = ({
       ctx.lineWidth = waveWidth || 50;
       ctx.strokeStyle = waveColors[i % waveColors.length];
       for (x = 0; x < w; x += 5) {
-        var y = noise(x / 800, 0.3 * i, nt) * 100;
+        const y = noise(x / 800, 0.3 * i, nt) * 100;
         ctx.lineTo(x, y + h * 0.5);
       }
       ctx.stroke();
@@ -110,8 +132,9 @@ export const WavyBackground = ({
 
   return (
     <div
+      ref={containerRef}
       className={cn(
-        "h-screen flex flex-col items-center justify-center",
+        "relative flex flex-col items-center justify-center",
         containerClassName
       )}
     >
@@ -119,9 +142,7 @@ export const WavyBackground = ({
         className="absolute inset-0 z-0"
         ref={canvasRef}
         id="canvas"
-        style={{
-          ...(isSafari ? { filter: `blur(${blur}px)` } : {}),
-        }}
+        style={isSafari ? { filter: `blur(${blur}px)` } : {}}
       ></canvas>
       <div className={cn("relative z-10", className)} {...props}>
         {children}
