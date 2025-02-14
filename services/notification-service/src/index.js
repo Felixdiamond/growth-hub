@@ -18,28 +18,72 @@ const parser = new XMLParser({
   removeNSPrefix: true,
 });
 
-// Create HTTP server for health checks
-const server = http.createServer((req, res) => {
-  if (req.url === '/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'healthy', timestamp: new Date().toISOString() }));
-    return;
-  }
+// Service state
+let isShuttingDown = false;
+let lastRunTime = null;
+let lastRunStatus = 'never';
+let activeJob = null;
 
-  res.writeHead(404);
-  res.end();
+// Create HTTP server for health checks
+const server = http.createServer(async (req, res) => {
+  try {
+    if (req.url === '/health') {
+      const db = await connectDB();
+      const lastCheck = await db.collection('system').findOne({ key: 'lastVideoCheck' });
+      
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        status: isShuttingDown ? 'shutting_down' : 'healthy',
+        timestamp: new Date().toISOString(),
+        lastCheck: lastCheck?.timestamp,
+        lastRunTime,
+        lastRunStatus,
+        nextRun: activeJob?.nextDate().toISOString(),
+        version: '1.0.0'
+      }));
+      return;
+    }
+
+    res.writeHead(404);
+    res.end();
+  } catch (error) {
+    console.error('Health check error:', error);
+    res.writeHead(500);
+    res.end(JSON.stringify({ error: 'Internal server error' }));
+  }
 });
 
 // Connect to MongoDB
 async function connectDB() {
   try {
-    await mongoClient.connect();
-    console.log('Connected to MongoDB');
+    if (!mongoClient.topology || !mongoClient.topology.isConnected()) {
+      await mongoClient.connect();
+      console.log('Connected to MongoDB');
+    }
     return mongoClient.db(process.env.MONGODB_DB || 'growth-hub');
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);
-    process.exit(1);
+    throw error;
   }
+}
+
+// Retry helper
+async function withRetry(operation, maxRetries = 3, delay = 1000) {
+  let lastError;
+  
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      console.error(`Attempt ${i + 1} failed:`, error);
+      if (i < maxRetries - 1) {
+        await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
+      }
+    }
+  }
+  
+  throw lastError;
 }
 
 // Check for new videos
@@ -48,7 +92,7 @@ async function checkNewVideos(channelId, db) {
     const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
     console.log('Fetching RSS feed from:', feedUrl);
 
-    const response = await fetch(feedUrl);
+    const response = await withRetry(() => fetch(feedUrl));
     if (!response.ok) {
       throw new Error(`Failed to fetch RSS feed: ${response.status} ${response.statusText}`);
     }
@@ -88,7 +132,7 @@ async function checkNewVideos(channelId, db) {
     return newVideos;
   } catch (error) {
     console.error('Error checking YouTube RSS feed:', error);
-    return [];
+    throw error; // Let the retry mechanism handle it
   }
 }
 
@@ -98,14 +142,20 @@ async function sendNotifications(video, subscribers, db) {
   const batchSize = 50; // Process in smaller batches
   let successCount = 0;
   let errorCount = 0;
+  const failedEmails = [];
 
   for (let i = 0; i < subscribers.length; i += batchSize) {
+    if (isShuttingDown) {
+      console.log('Service is shutting down, stopping notification sending');
+      break;
+    }
+
     const batch = subscribers.slice(i, Math.min(i + batchSize, subscribers.length));
     
     await Promise.all(
       batch.map(async (subscriber) => {
         try {
-          await resend.emails.send({
+          await withRetry(() => resend.emails.send({
             from: 'Growth Hub <onboarding@resend.dev>',
             to: subscriber.email,
             subject: `🎥 New Video: ${video.title}`,
@@ -174,11 +224,12 @@ async function sendNotifications(video, subscribers, db) {
                 </body>
               </html>
             `,
-          });
+          }));
           successCount++;
         } catch (error) {
           console.error('Error sending email:', error);
           errorCount++;
+          failedEmails.push({ email: subscriber.email, error: error.message });
         }
       })
     );
@@ -189,29 +240,42 @@ async function sendNotifications(video, subscribers, db) {
     }
   }
 
+  // Store failed notifications for retry
+  if (failedEmails.length > 0) {
+    await db.collection('failedNotifications').insertOne({
+      videoId: video.videoId,
+      failedEmails,
+      createdAt: new Date()
+    });
+  }
+
   // Mark video as notified
   await db.collection('videos').updateOne(
     { videoId: video.videoId },
     {
       $set: {
         notifiedAt: new Date(),
+        successCount,
+        errorCount,
       },
     },
     { upsert: true }
   );
 
-  return { successCount, errorCount };
+  return { successCount, errorCount, failedEmails };
 }
 
 // Main process function
 async function processNewVideos(db) {
+  lastRunTime = new Date();
   try {
     console.log('Starting video check process...');
 
     // Get new videos
-    const videos = await checkNewVideos(process.env.YOUTUBE_CHANNEL_ID, db);
+    const videos = await withRetry(() => checkNewVideos(process.env.YOUTUBE_CHANNEL_ID, db));
     if (videos.length === 0) {
       console.log('No new videos found');
+      lastRunStatus = 'success_no_videos';
       return;
     }
 
@@ -222,11 +286,17 @@ async function processNewVideos(db) {
 
     if (subscribers.length === 0) {
       console.log('No verified subscribers to notify');
+      lastRunStatus = 'success_no_subscribers';
       return;
     }
 
     // Process each video
     for (const video of videos) {
+      if (isShuttingDown) {
+        console.log('Service is shutting down, stopping video processing');
+        break;
+      }
+
       // Check if already notified
       const existingVideo = await db.collection('videos').findOne({ videoId: video.videoId });
       if (existingVideo?.notifiedAt) {
@@ -236,34 +306,92 @@ async function processNewVideos(db) {
 
       // Send notifications
       console.log(`Processing video: ${video.title}`);
-      const { successCount, errorCount } = await sendNotifications(video, subscribers, db);
+      const { successCount, errorCount, failedEmails } = await sendNotifications(video, subscribers, db);
       console.log(`Notifications sent - Success: ${successCount}, Errors: ${errorCount}`);
+      
+      if (failedEmails.length > 0) {
+        console.log(`Failed to send ${failedEmails.length} emails. Details stored in database.`);
+      }
     }
+
+    lastRunStatus = 'success';
   } catch (error) {
     console.error('Error in process:', error);
+    lastRunStatus = 'error';
+    
+    // Log error to database for monitoring
+    try {
+      await db.collection('errors').insertOne({
+        timestamp: new Date(),
+        error: error.message,
+        stack: error.stack,
+      });
+    } catch (dbError) {
+      console.error('Failed to log error to database:', dbError);
+    }
   }
+}
+
+// Graceful shutdown
+async function shutdown() {
+  console.log('Shutting down...');
+  isShuttingDown = true;
+
+  // Close server
+  server.close(() => {
+    console.log('HTTP server closed');
+  });
+
+  // Stop cron job
+  if (activeJob) {
+    activeJob.stop();
+    console.log('Cron job stopped');
+  }
+
+  // Close MongoDB connection
+  try {
+    await mongoClient.close();
+    console.log('MongoDB connection closed');
+  } catch (error) {
+    console.error('Error closing MongoDB connection:', error);
+  }
+
+  // Exit after a timeout
+  setTimeout(() => {
+    console.log('Forcing exit after timeout');
+    process.exit(1);
+  }, 10000).unref();
 }
 
 // Start the service
 async function startService() {
-  const db = await connectDB();
+  try {
+    const db = await connectDB();
 
-  // Run every day at 12:00 UTC
-  const job = new CronJob(
-    '0 12 * * *',
-    () => processNewVideos(db),
-    null,
-    true,
-    'UTC'
-  );
+    // Run every hour
+    activeJob = new CronJob(
+      '0 * * * *',  // Run at minute 0 of every hour
+      () => processNewVideos(db),
+      null,
+      true,
+      'UTC'
+    );
 
-  // Start HTTP server
-  const PORT = process.env.PORT || 10000;
-  server.listen(PORT, () => {
-    console.log(`Health check server listening on port ${PORT}`);
-  });
+    // Start HTTP server
+    const PORT = process.env.PORT || 10000;
+    server.listen(PORT, () => {
+      console.log(`Health check server listening on port ${PORT}`);
+    });
 
-  console.log('Service started. Next run:', job.nextDate().toString());
+    console.log('Service started. Next run:', activeJob.nextDate().toString());
+
+    // Handle graceful shutdown
+    process.on('SIGTERM', shutdown);
+    process.on('SIGINT', shutdown);
+  } catch (error) {
+    console.error('Failed to start service:', error);
+    process.exit(1);
+  }
 }
 
 startService().catch(console.error); 
