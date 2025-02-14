@@ -35,5 +35,10 @@ export async function getCollections() {
   return {
     subscribers: db.collection('subscribers'),
     videos: db.collection('videos'),
+    donations: db.collection('donations'),
+    subscriptions: db.collection('subscriptions'),
+    charges: db.collection('charges'),
+    errors: db.collection('errors'),
+    system: db.collection('system'),
   };
 } 
