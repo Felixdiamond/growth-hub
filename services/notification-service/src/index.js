@@ -4,6 +4,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { MongoClient } from 'mongodb';
 import { Resend } from 'resend';
 import fetch from 'node-fetch';
+import http from 'http';
 
 // Load environment variables
 config();
@@ -15,6 +16,18 @@ const parser = new XMLParser({
   ignoreAttributes: false,
   attributeNamePrefix: '@_',
   removeNSPrefix: true,
+});
+
+// Create HTTP server for health checks
+const server = http.createServer((req, res) => {
+  if (req.url === '/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'healthy', timestamp: new Date().toISOString() }));
+    return;
+  }
+
+  res.writeHead(404);
+  res.end();
 });
 
 // Connect to MongoDB
@@ -30,7 +43,7 @@ async function connectDB() {
 }
 
 // Check for new videos
-async function checkNewVideos(channelId) {
+async function checkNewVideos(channelId, db) {
   try {
     const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
     console.log('Fetching RSS feed from:', feedUrl);
@@ -45,14 +58,34 @@ async function checkNewVideos(channelId) {
     const entries = feed.feed?.entry || [];
     console.log(`Found ${entries.length} entries in feed`);
 
-    return entries.map(entry => ({
-      videoId: entry.videoId,
-      title: entry.title,
-      link: entry.link['@_href'],
-      description: entry.group?.description || entry.description || '',
-      thumbnail: `https://i.ytimg.com/vi/${entry.videoId}/maxresdefault.jpg`,
-      publishedAt: new Date(entry.published),
-    }));
+    // Get the last check time
+    const lastCheck = await db.collection('system').findOne({ key: 'lastVideoCheck' });
+    const lastCheckTime = lastCheck?.timestamp || new Date(0);
+
+    // Filter only new videos
+    const newVideos = [];
+    for (const entry of entries) {
+      const publishedAt = new Date(entry.published);
+      if (publishedAt > lastCheckTime) {
+        newVideos.push({
+          videoId: entry.videoId,
+          title: entry.title,
+          link: entry.link['@_href'],
+          description: entry.group?.description || entry.description || '',
+          thumbnail: `https://i.ytimg.com/vi/${entry.videoId}/maxresdefault.jpg`,
+          publishedAt,
+        });
+      }
+    }
+
+    // Update last check time
+    await db.collection('system').updateOne(
+      { key: 'lastVideoCheck' },
+      { $set: { timestamp: new Date() } },
+      { upsert: true }
+    );
+
+    return newVideos;
   } catch (error) {
     console.error('Error checking YouTube RSS feed:', error);
     return [];
@@ -176,7 +209,7 @@ async function processNewVideos(db) {
     console.log('Starting video check process...');
 
     // Get new videos
-    const videos = await checkNewVideos(process.env.YOUTUBE_CHANNEL_ID);
+    const videos = await checkNewVideos(process.env.YOUTUBE_CHANNEL_ID, db);
     if (videos.length === 0) {
       console.log('No new videos found');
       return;
@@ -224,10 +257,13 @@ async function startService() {
     'UTC'
   );
 
-  console.log('Service started. Next run:', job.nextDate().toString());
+  // Start HTTP server
+  const PORT = process.env.PORT || 10000;
+  server.listen(PORT, () => {
+    console.log(`Health check server listening on port ${PORT}`);
+  });
 
-  // Also run once on startup
-  await processNewVideos(db);
+  console.log('Service started. Next run:', job.nextDate().toString());
 }
 
 startService().catch(console.error); 

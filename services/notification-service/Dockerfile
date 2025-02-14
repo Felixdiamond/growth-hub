@@ -11,5 +11,8 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# Expose the port
+EXPOSE 10000
+
 # Start the service
 CMD ["npm", "start"] 
