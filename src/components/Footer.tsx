@@ -3,22 +3,45 @@
 import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
 import { useRef } from 'react';
+import { TbGrowth } from 'react-icons/tb';
+import { useSmoothScroll } from '@/hooks/useSmoothScroll';
+import { usePathname } from 'next/navigation';
 
 const Footer = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const { scrollToSection } = useSmoothScroll();
+  const pathname = usePathname();
+
+  const handleSectionNavigation = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    e.preventDefault();
+    
+    // Check if the section exists on current page
+    const section = document.getElementById(sectionId);
+    
+    if (pathname === '/') {
+      // If we're on home page, just scroll
+      scrollToSection(sectionId);
+    } else if (section) {
+      // If section exists on current page, scroll to it
+      scrollToSection(sectionId);
+    } else {
+      // If section doesn't exist, go to home page section
+      window.location.href = `/#${sectionId}`;
+    }
+  };
 
   const quickLinks = [
     { label: 'Home', href: '/' },
     { label: 'About', href: '#about' },
-    { label: 'Tutorials', href: '#tutorials' },
-    { label: 'Newsletter', href: '#newsletter' },
+    { label: 'Tutorials', href: '/blog' },
+    { label: 'Code', href: '/code' },
   ];
 
   const socialLinks = [
     {
       label: 'YouTube',
-      href: 'https://youtube.com/@theofficialgrowthub',
+      href: 'https://youtube.com/@shaun_paw?si=M-XvIXRiti0-e5dH',
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
           <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
@@ -36,7 +59,7 @@ const Footer = () => {
     },
     {
       label: 'Arduino Kit',
-      href: 'https://www.amazon.com/ELEGOO-Project-Tutorial-Controller-Projects/dp/B01D8KOZF4',
+      href: 'https://amzn.to/3Yv56Jg',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -86,17 +109,25 @@ const Footer = () => {
         >
           {/* Brand */}
           <motion.div variants={itemVariants} className="space-y-3 sm:space-y-4">
-            <Link href="/" className="inline-block group">
+          <Link 
+              href="/" 
+              className="group relative flex items-center space-x-3 z-10"
+            >
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="relative"
               >
-                <span className="text-xl sm:text-2xl font-bold text-white group-hover:text-transparent bg-clip-text bg-gradient-to-r from-accent-300 via-accent-400 to-accent-300 transition-all duration-300">
-                  Growth Hub
-                </span>
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-accent-300 via-accent-400 to-accent-300 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-accent-500/20 to-accent-400/20 blur-lg group-hover:blur-xl transition-all duration-300 opacity-0 group-hover:opacity-100" />
+                <TbGrowth className="relative w-8 h-8 text-accent-300 group-hover:text-accent-200 transition-colors duration-300" />
               </motion.div>
+              <motion.span
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="text-xl font-bold text-white group-hover:text-accent-200 transition-colors duration-300"
+              >
+                Growth Hub
+              </motion.span>
             </Link>
             <p className="text-sm sm:text-base text-dark-100">
               Empowering creators with the knowledge and skill to build their dream machines.
@@ -156,6 +187,7 @@ const Footer = () => {
             </p>
             <motion.a
               href="#newsletter"
+              onClick={(e) => handleSectionNavigation(e, 'newsletter')}
               whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(14,165,233,0.2)" }}
               whileTap={{ scale: 0.95 }}
               className="inline-block px-5 sm:px-6 py-2 rounded-lg bg-accent-500 text-sm sm:text-base text-white font-medium transition-all duration-300 shadow-lg shadow-accent-500/25 relative overflow-hidden group"

@@ -13,7 +13,7 @@ export default function BlogVideo({ videoId, title }: BlogVideoProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative overflow-hidden rounded-2xl border border-dark-800/50 bg-dark-800/50 backdrop-blur-sm mb-16"
+      className="sm:mt-6 relative overflow-hidden rounded-2xl border border-dark-800/50 bg-dark-800/50 backdrop-blur-sm mb-16"
     >
       {/* Window chrome */}
       <div className="relative flex items-center gap-1.5 border-b border-dark-800/50 px-4 py-3">
@@ -26,7 +26,7 @@ export default function BlogVideo({ videoId, title }: BlogVideoProps) {
 
         {/* Title */}
         {title && (
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 sm:hidden">
             <div className="rounded-lg bg-dark-800/90 px-3 py-1 text-[13px] font-medium tracking-wide text-dark-200">
               {title}
             </div>

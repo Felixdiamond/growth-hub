@@ -52,7 +52,7 @@ const SupportAndResources = () => {
   });
 
   return (
-    <section className="relative py-16 sm:py-24 bg-dark-900 overflow-hidden">
+    <section id="support" className="relative py-16 sm:py-24 bg-dark-900 overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-dark-800 via-dark-900 to-dark-800" />

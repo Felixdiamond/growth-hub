@@ -110,7 +110,7 @@ const About = () => {
               >
                 <div className="flex items-center gap-4 sm:gap-6">
                   <a
-                    href="https://youtube.com/@theofficialgrowthub"
+                    href="https://youtube.com/@shaun_paw?si=M-XvIXRiti0-e5dH"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white hover:text-accent-400 transition-colors duration-300"
@@ -125,7 +125,7 @@ const About = () => {
                     </motion.svg>
                   </a>
                   <a
-                    href="mailto:growthub2024@outlook.com"
+                    href="mailto:shaunpaw22@gmail.com"
                     className="text-white hover:text-accent-400 transition-colors duration-300"
                   >
                     <motion.svg 
@@ -222,7 +222,7 @@ const About = () => {
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6">
                 <motion.a
-                  href="https://youtube.com/@theofficialgrowthub"
+                  href="https://youtube.com/@shaun_paw?si=M-XvIXRiti0-e5dH"
                   target="_blank"
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(14,165,233,0.2)" }}

@@ -9,7 +9,7 @@ export const blogPosts: BlogPost[] = [
     author: 'Shaun Sosi',
     tags: ['ARDUINO LESSONS', 'Getting Started', 'Hardware'],
     episode: 1,
-    image: '/images/blog/ep1img1.png',
+    image: '/images/blog/ep1img1.jpg',
     excerpt: 'Begin your journey into the world of Arduino with this comprehensive guide covering the basics of Arduino hardware, software, and programming concepts.'
   },
   {
@@ -20,7 +20,7 @@ export const blogPosts: BlogPost[] = [
     author: 'Shaun Sosi',
     tags: ['ARDUINO LESSONS', 'Hardware', 'Programming'],
     episode: 2,
-    image: '/images/blog/ep2img1.png',
+    image: '/images/blog/ep2img1.jpg',
     excerpt: 'Master the fundamentals of using a breadboard for circuit prototyping and learn how to write your first Arduino sketches.'
   },
   {
@@ -31,7 +31,7 @@ export const blogPosts: BlogPost[] = [
     author: 'Shaun Sosi',
     tags: ['ARDUINO LESSONS', 'Hardware', 'Best Practices'],
     episode: 3,
-    image: '/images/blog/ep3img1.png',
+    image: '/images/blog/ep3img1.jpg',
     excerpt: 'Learn essential tips and techniques for clean, reliable circuit wiring with your Arduino projects, including color-coding and connection testing.'
   },
   {
@@ -42,7 +42,7 @@ export const blogPosts: BlogPost[] = [
     author: 'Shaun Sosi',
     tags: ['ARDUINO LESSONS', 'Programming', 'LED Projects'],
     episode: 4,
-    image: '/images/blog/ep4img1.png',
+    image: '/images/blog/ep4img1.jpg',
     excerpt: 'Learn how to write your first Arduino program to control an LED, understanding essential programming concepts like pinMode, digitalWrite, and delay functions.'
   },
   {
@@ -53,7 +53,7 @@ export const blogPosts: BlogPost[] = [
     author: 'Shaun Sosi',
     tags: ['ARDUINO LESSONS', 'Programming', 'LED Projects'],
     episode: 5,
-    image: '/images/blog/ep5img1.png',
+    image: '/images/blog/ep5img1.jpg',
     excerpt: 'Take your LED programming skills to the next level by creating advanced blinking patterns and understanding timing control in Arduino sketches.'
   },
   {
@@ -64,7 +64,7 @@ export const blogPosts: BlogPost[] = [
     author: 'Shaun Sosi',
     tags: ['ARDUINO LESSONS', 'Programming', 'Debugging'],
     episode: 6,
-    image: '/images/blog/ep6img1.png',
+    image: '/images/blog/ep6img1.jpg',
     excerpt: 'Master the Serial Monitor to communicate with your Arduino, debug your code, and understand data transmission concepts.'
   },
   {
@@ -75,7 +75,7 @@ export const blogPosts: BlogPost[] = [
     author: 'Shaun Sosi',
     tags: ['ARDUINO LESSONS', 'Programming', 'Variables'],
     episode: 7,
-    image: '/images/blog/ep7img1.png',
+    image: '/images/blog/ep7img1.jpg',
     excerpt: 'Master the fundamentals of variables in Arduino programming, including different data types like integers, strings, and floats, to write more efficient and organized code.'
   },
   {
@@ -86,7 +86,7 @@ export const blogPosts: BlogPost[] = [
     author: 'Shaun Sosi',
     tags: ['ARDUINO LESSONS', 'Electronics', 'Fundamentals'],
     episode: 8,
-    image: '/images/blog/ep8img1.png',
+    image: '/images/blog/ep8img1.jpg',
     excerpt: 'Master the basic principles of electronics by understanding voltage, current, and resistance through simple analogies and Ohm\'s Law.'
   },
   {
@@ -97,7 +97,7 @@ export const blogPosts: BlogPost[] = [
     author: 'Shaun Sosi',
     tags: ['ARDUINO LESSONS', 'Programming', 'LED Projects', 'PWM'],
     episode: 9,
-    image: '/images/blog/ep9img1.png',
+    image: '/images/blog/ep9img1.jpg',
     excerpt: 'Master LED dimming techniques using Arduino\'s analogWrite function and understand the principles of PWM (Pulse Width Modulation).'
   },
   {
@@ -108,7 +108,7 @@ export const blogPosts: BlogPost[] = [
     author: 'Shaun Sosi',
     tags: ['ARDUINO LESSONS', 'Programming', 'Analog Input'],
     episode: 10,
-    image: '/images/blog/ep10img1.png',
+    image: '/images/blog/ep10img1.jpg',
     excerpt: 'Master analog input reading with Arduino\'s analogRead function, including voltage conversion formulas and practical applications.'
   },
   {

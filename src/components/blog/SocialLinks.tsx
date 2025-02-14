@@ -21,25 +21,25 @@ const links = [
   },
   {
     name: 'YouTube',
-    url: 'https://youtube.com/shaun_paw',
+    url: 'https://youtube.com/@shaun_paw?si=M-XvIXRiti0-e5dH',
     icon: FaYoutube,
     color: 'hover:text-red-500 hover:bg-red-500/10',
     description: 'Subscribe on YouTube'
   },
-  {
-    name: 'GitHub',
-    url: 'https://github.com/shaunpaw',
-    icon: FaGithub,
-    color: 'hover:text-purple-500 hover:bg-purple-500/10',
-    description: 'Check out my code'
-  },
-  {
-    name: 'Twitter',
-    url: 'https://twitter.com/shaunpaw',
-    icon: FaTwitter,
-    color: 'hover:text-blue-400 hover:bg-blue-500/10',
-    description: 'Follow me on Twitter'
-  }
+  // {
+  //   name: 'GitHub',
+  //   url: 'https://github.com/shaunpaw',
+  //   icon: FaGithub,
+  //   color: 'hover:text-purple-500 hover:bg-purple-500/10',
+  //   description: 'Check out my code'
+  // },
+  // {
+  //   name: 'Twitter',
+  //   url: 'https://twitter.com/shaunpaw',
+  //   icon: FaTwitter,
+  //   color: 'hover:text-blue-400 hover:bg-blue-500/10',
+  //   description: 'Follow me on Twitter'
+  // }
 ];
 
 const containerVariants = {

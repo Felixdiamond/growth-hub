@@ -5,11 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { TbGrowth } from "react-icons/tb";
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
+import { usePathname } from 'next/navigation';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollToSection } = useSmoothScroll();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,12 +29,35 @@ const Navigation = () => {
     { label: 'Newsletter', href: '#newsletter', isSection: true },
   ];
 
+  const handleSectionNavigation = (sectionId: string) => {
+    // Check if the section exists on current page
+    const section = document.getElementById(sectionId);
+    
+    if (pathname === '/') {
+      // If we're on home page, just scroll
+      scrollToSection(sectionId);
+    } else if (section) {
+      // If section exists on current page, scroll to it
+      scrollToSection(sectionId);
+    } else {
+      // If section doesn't exist, go to home page section
+      window.location.href = `/#${sectionId}`;
+    }
+  };
+
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, item: { href: string; isSection?: boolean }) => {
     if (item.isSection) {
       e.preventDefault();
-      scrollToSection(item.href.substring(1));
+      const sectionId = item.href.substring(1);
+      handleSectionNavigation(sectionId);
       setIsMobileMenuOpen(false);
     }
+  };
+
+  const handleSupportClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    handleSectionNavigation('support');
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -85,9 +110,8 @@ const Navigation = () => {
                 </Link>
               ))}
               <motion.a
-                href="https://github.com/sponsors/yourusername"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#support"
+                onClick={handleSupportClick}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="relative px-5 py-2 text-[15px] font-medium text-white"
@@ -195,15 +219,25 @@ const Navigation = () => {
                 </div>
                 <div className="p-6 border-t border-dark-700/50">
                   <motion.a
-                    href="https://github.com/sponsors/yourusername"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="#support"
+                    onClick={handleSupportClick}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="block w-full py-3 text-center text-[15px] font-medium text-white rounded-xl bg-gradient-to-r from-accent-500 to-accent-400 hover:from-accent-400 hover:to-accent-500 transition-all duration-300"
                   >
                     Support Project
                   </motion.a>
+                  <div className="mt-4 text-center text-sm text-dark-200">
+                    Built with <span className="text-accent-400">♥</span> by{' '}
+                    <a 
+                      href="https://portfolio-ayane.vercel.app" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-accent-300 hover:text-accent-400 transition-colors"
+                    >
+                      Felix
+                    </a>
+                  </div>
                 </div>
               </div>
             </motion.div>

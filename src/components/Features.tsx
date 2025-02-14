@@ -33,7 +33,7 @@ const Features = () => {
           <path d="M2 12L12 17L22 12" className="stroke-accent-300" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       ),
-      path: "/blog/getting-started-with-arduino-ep1",
+      path: "",
       topics: ["Digital I/O", "Circuit Basics", "First Sketch"],
       variant: "blue",
       level: "Beginner"
@@ -49,7 +49,7 @@ const Features = () => {
           <path d="M4 9H20" className="stroke-accent-300" strokeWidth="1.5" strokeLinecap="round"/>
         </svg>
       ),
-      path: "/blog/led-dimming-pwm-ep9",
+      path: "",
       topics: ["Sensors", "PWM Control", "Serial Monitor"],
       variant: "blue",
       level: "Intermediate"
@@ -65,7 +65,7 @@ const Features = () => {
           <path d="M18 22C20.2091 22 22 20.2091 22 18C22 15.7909 20.2091 14 18 14C15.7909 14 14 15.7909 14 18C14 20.2091 15.7909 22 18 22Z" className="stroke-accent-300" strokeWidth="1.5"/>
         </svg>
       ),
-      path: "/blog/rgb-setcolor-function-ep16",
+      path: "",
       topics: ["Functions", "Libraries", "IoT Projects"],
       variant: "blue",
       level: "Advanced"
@@ -116,10 +116,10 @@ const Features = () => {
                 animate={isInView ? "visible" : "hidden"}
                 className="flex justify-center max-w-[400px] md:max-w-none mx-auto w-full"
               >
-                <Link href={feature.path} className="block w-full">
+                <div className="w-full">
                   <PixelCard
                     variant={feature.variant}
-                    className="group cursor-pointer"
+                    className="group cursor-default"
                   >
                     <div className="absolute inset-0 p-6 sm:p-8 flex flex-col">
                       <div className="relative">
@@ -148,7 +148,7 @@ const Features = () => {
                       </div>
                     </div>
                   </PixelCard>
-                </Link>
+                </div>
               </motion.div>
             ))}
           </div>
