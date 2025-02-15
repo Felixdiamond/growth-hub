@@ -108,7 +108,7 @@ void loop() {
               </motion.p>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-                <Link href="/blog/getting-started-with-arduino-ep1">
+                <Link href="/blog/ep1-getting-started-with-arduino">
                   <motion.button
                     whileHover={{ scale: 1.05, backgroundColor: 'rgb(var(--accent-400))' }}
                     whileTap={{ scale: 0.95 }}

@@ -162,7 +162,7 @@ const Features = () => {
           className="mt-16 sm:mt-20 text-center"
         >
           <Link 
-            href="/blog/getting-started-with-arduino-ep1" 
+            href="/blog/ep1-getting-started-with-arduino" 
             className="group inline-flex items-center text-accent-300 hover:text-accent-200 transition-colors text-lg sm:text-xl font-medium"
           >
             Start learning for free
