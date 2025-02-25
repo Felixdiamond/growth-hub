@@ -54,7 +54,7 @@ export async function GET(req: Request) {
     const subscriber = verifiedSubscribers[0];
     
     const { data, error } = await resend.emails.send({
-      from: 'Growth Hub <onboarding@resend.dev>',
+      from: 'Growth Hub <newsletter@shaunpaw.org>',
       to: subscriber.email,
       subject: `🎥 [TEST] New Video: ${testVideo.title}`,
       html: `

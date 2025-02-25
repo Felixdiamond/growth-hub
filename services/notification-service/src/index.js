@@ -156,7 +156,7 @@ async function sendNotifications(video, subscribers, db) {
       batch.map(async (subscriber) => {
         try {
           await withRetry(() => resend.emails.send({
-            from: 'Growth Hub <onboarding@resend.dev>',
+            from: 'Growth Hub <newsletter@shaunpaw.org>',
             to: subscriber.email,
             subject: `🎥 New Video: ${video.title}`,
             html: `
