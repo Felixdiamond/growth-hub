@@ -15,13 +15,6 @@ const SupportAndResources = () => {
 
   const kitOptions = [
     {
-      title: "Temu Arduino Kit",
-      description: "Get started with this affordable Arduino kit from Temu. Perfect for beginners with all essential components.",
-      link: "https://temu.to/k/u77r95d7o9p",
-      platform: "Temu",
-      features: ["Basic Components", "Affordable", "Beginner Friendly"]
-    },
-    {
       title: "Elegoo Arduino Kit",
       description: "Professional Arduino kit from Elegoo available on Amazon. Comprehensive kit with premium components.",
       link: "https://amzn.to/3Yv56Jg",
