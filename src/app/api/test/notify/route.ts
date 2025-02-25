@@ -40,7 +40,7 @@ export async function GET(req: Request) {
     const { subscribers } = await getCollections();
     const verifiedSubscribers = await subscribers
       .find({ verified: true })
-      .limit(1) // Just get one subscriber for testing
+      .limit(2) // Just get one subscriber for testing
       .toArray();
     
     if (verifiedSubscribers.length === 0) {
@@ -51,7 +51,7 @@ export async function GET(req: Request) {
     }
     
     // Send test email
-    const subscriber = verifiedSubscribers[0];
+    const subscriber = verifiedSubscribers[1];
     
     const { data, error } = await resend.emails.send({
       from: 'Growth Hub <newsletter@shaunpaw.org>',
