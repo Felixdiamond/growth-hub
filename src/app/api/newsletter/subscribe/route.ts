@@ -88,7 +88,7 @@ async function sendVerificationEmail(email: string, token: string) {
   
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Growth Hub <onboarding@resend.dev>',
+      from: 'Growth Hub <newsletter@shaunpaw.org>',
       to: email,
       subject: '🚀 Verify your Growth Hub subscription',
       html: `
